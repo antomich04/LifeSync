@@ -1,0 +1,145 @@
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css';
+@import "@spartan-ng/brain/hlm-tailwind-preset.css";
+
+@layer theme {
+  :root {
+    color-scheme: light;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --radius: 0.625rem;
+
+    /* --- BRAND PALETTE (Reference) ---
+       Primary: #006064 | Secondary: #78909C | Surface: #FAFAF9 
+       Footer: #1A2421  | Text: #455A64      | Highlight: #D1ECE9 
+    ------------------------------------ */
+
+    /* --- Base Surfaces --- */
+    --background: oklch(0.985 0.005 85); /* Surface: #FAFAF9 */
+    --foreground: oklch(0.45 0.03 225);  /* Text: #455A64 */
+    
+    --card: oklch(0.985 0.005 85);       /* Surface */
+    --card-foreground: oklch(0.45 0.03 225); /* Text */
+    
+    --popover: oklch(0.985 0.005 85);    /* Surface */
+    --popover-foreground: oklch(0.45 0.03 225); /* Text */
+
+    /* --- Brand Colors --- */
+    --primary: oklch(0.42 0.07 195);     /* Primary: #006064 */
+    --primary-foreground: oklch(0.985 0.005 85); /* Surface (White text on dark teal) */
+    
+    --secondary: oklch(0.65 0.04 220);   /* Secondary: #78909C */
+    --secondary-foreground: oklch(0.985 0.005 85); /* Surface (White text on slate) */
+
+    /* --- Interactive & Muted States --- */
+    --muted: oklch(0.92 0.04 195);       /* Highlight: #D1ECE9 (Great for subtle backgrounds) */
+    --muted-foreground: oklch(0.65 0.04 220); /* Secondary */
+    
+    --accent: oklch(0.92 0.04 195);      /* Highlight: #D1ECE9 */
+    --accent-foreground: oklch(0.42 0.07 195); /* Primary (Dark teal text on mint background) */
+
+    --destructive: oklch(0.577 0.245 27.325); /* Standard Red */
+    --destructive-foreground: oklch(0.985 0.005 85);
+
+    /* --- System Elements --- */
+    --border: oklch(0.92 0.04 195);      /* Highlight used as soft dividers */
+    --input: oklch(0.92 0.04 195);
+    --ring: oklch(0.42 0.07 195);        /* Primary color for focus rings */
+
+    /* --- Sidebar Component --- */
+
+    /* Base: deep forest teal — halfway between #006064 and #1A2421. */
+    --sidebar: oklch(0.26 0.055 192);
+
+    /* Foreground: off-white with a whisper of warmth for readability */
+    --sidebar-foreground: oklch(0.93 0.012 85);
+
+    /* Primary accent: the vivid highlight mint (#D1ECE9) glows
+       beautifully against the dark teal — used for active states. */
+    --sidebar-primary: oklch(0.88 0.055 192);
+    --sidebar-primary-foreground: oklch(0.26 0.055 192); /* Dark teal text on mint */
+
+    /* Accent: a mid-luminance teal overlay for hover / active backgrounds.
+       More saturated than the old #D1ECE9 wash so it reads clearly
+       against the dark sidebar base. */
+    --sidebar-accent: oklch(0.38 0.075 192);
+    --sidebar-accent-foreground: oklch(0.93 0.012 85);
+
+    /* Border: a subtle teal-tinted separator — visible but not loud. */
+    --sidebar-border: oklch(0.34 0.06 192);
+
+    /* Ring: mint for keyboard focus visibility on dark bg. */
+    --sidebar-ring: oklch(0.88 0.055 192);
+
+    /* --- Homepage Section Layout Extensions --- */
+    --section-subtle: oklch(0.96 0.02 195); /* An ultra-light tint of Highlight for alternating divs */
+    --section-dark: oklch(0.24 0.02 180);   /* Footer: #1A2421 (Used for high-impact CTA sections) */
+  }
+
+  :root.dark {
+    color-scheme: dark;
+
+    /* --- Dark Mode Base --- */
+    --background: oklch(0.24 0.02 180);  /* Footer: #1A2421 (Deep charcoal background) */
+    --foreground: oklch(0.985 0.005 85); /* Surface: #FAFAF9 (Off-white text) */
+    
+    --card: oklch(0.28 0.02 180);        /* Slightly lighter than Footer for elevation */
+    --card-foreground: oklch(0.985 0.005 85);
+    
+    --popover: oklch(0.28 0.02 180);
+    --popover-foreground: oklch(0.985 0.005 85);
+
+    /* --- Dark Mode Brand Colors --- */
+    --primary: oklch(0.92 0.04 195);     /* Highlight: #D1ECE9 (Mint pops beautifully in dark mode) */
+    --primary-foreground: oklch(0.42 0.07 195); /* Primary: #006064 (Dark text on mint buttons) */
+    
+    --secondary: oklch(0.65 0.04 220);   /* Secondary: #78909C (Remains stable) */
+    --secondary-foreground: oklch(0.985 0.005 85);
+
+    /* --- Interactive & Muted States --- */
+    --muted: oklch(0.32 0.03 185);       /* Dark muted slate */
+    --muted-foreground: oklch(0.65 0.04 220); /* Secondary */
+    
+    --accent: oklch(0.32 0.03 185);
+    --accent-foreground: oklch(0.985 0.005 85);
+
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.985 0.005 85);
+
+    /* --- System Elements --- */
+    --border: oklch(0.32 0.03 185);
+    --input: oklch(0.32 0.03 185);
+    --ring: oklch(0.92 0.04 195);        /* Highlight color for focus rings */
+
+    /* --- Sidebar Component (Dark Mode) --- */
+    --sidebar: oklch(0.20 0.06 192);
+    --sidebar-foreground: oklch(0.93 0.012 85);
+    --sidebar-primary: oklch(0.88 0.055 192);
+    --sidebar-primary-foreground: oklch(0.20 0.06 192);
+    --sidebar-accent: oklch(0.32 0.07 192);
+    --sidebar-accent-foreground: oklch(0.93 0.012 85);
+    --sidebar-border: oklch(0.28 0.06 192);
+    --sidebar-ring: oklch(0.88 0.055 192);
+
+    /* --- Homepage Section Layout Extensions --- */
+    --section-subtle: oklch(0.28 0.02 180); /* Slightly elevated dark background */
+    --section-dark: oklch(0.15 0.02 180);   /* Even darker than Footer for deep contrast */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  ::selection {
+    /* Uses the light mint highlight color */
+    background-color: var(--accent); 
+    /* Keeps the text dark for maximum readability */
+    color: var(--foreground);
+  }
+}

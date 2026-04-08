@@ -1,0 +1,58 @@
+
+<hlm-sidebar collapsible="none" class=" border-sidebar-border bg-gradient-to-b from-sidebar to-primary/45 text-sidebar-foreground">
+    
+    <div hlmSidebarHeader>
+        <!-- Card uses a subtle dark tint to separate it from the gradient -->
+        <hlm-card size="sm" class="ring-0 shadow-none bg-black/15 border-transparent hover:bg-black/10 transition-colors" routerLink="/">
+            <div hlmCardContent class="flex items-center justify-center p-4">
+                <img src="logo.png" alt="LifeSync Logo" class="w-40 select-none drop-shadow-md">
+            </div>
+        </hlm-card>
+
+    </div>
+    
+    <div hlmSidebarContent class="flex-1 px-3">
+
+      <div hlmSidebarGroup>
+        
+        <!-- Dashboard -->
+        <button hlmBtn variant="ghost" 
+            class="flex items-center gap-2 w-full justify-start mt-12 mb-3 p-2 rounded-md cursor-pointer transition-all duration-300 border border-white/10 bg-white/5 text-sidebar-foreground/85 shadow-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-primary/50 hover:shadow-md" 
+            routerLink="/dashboard" 
+            routerLinkActive="!bg-sidebar-accent !text-sidebar-accent-foreground !border-sidebar-primary/50 font-medium !shadow-[inset_4px_0_0_0_var(--sidebar-primary)] hover:!shadow-[inset_4px_0_0_0_var(--sidebar-primary)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard-icon"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+            Dashboard
+        </button>
+
+        <!-- Forecast -->
+        <button hlmBtn variant="ghost" 
+            class="flex items-center gap-2 w-full justify-start mb-3 p-2 rounded-md cursor-pointer transition-all duration-300 border border-white/10 bg-white/5 text-sidebar-foreground/85 shadow-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-primary/50 hover:shadow-md" 
+            routerLink="/forecast" 
+            routerLinkActive="!bg-sidebar-accent !text-sidebar-accent-foreground !border-sidebar-primary/50 font-medium !shadow-[inset_4px_0_0_0_var(--sidebar-primary)] hover:!shadow-[inset_4px_0_0_0_var(--sidebar-primary)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-no-axes-combined-icon"><path d="M12 16v5"/><path d="M16 14v7"/><path d="M20 10v11"/><path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15"/><path d="M4 18v3"/><path d="M8 14v7"/></svg>
+            Forecast
+        </button>
+
+        <!-- Advisors -->
+        <button hlmBtn variant="ghost" 
+            class="flex items-center gap-2 w-full justify-start mb-3 p-2 rounded-md cursor-pointer transition-all duration-300 border border-white/10 bg-white/5 text-sidebar-foreground/85 shadow-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-primary/50 hover:shadow-md" 
+            routerLink="/advisors" 
+            routerLinkActive="!bg-sidebar-accent !text-sidebar-accent-foreground !border-sidebar-primary/50 font-medium !shadow-[inset_4px_0_0_0_var(--sidebar-primary)] hover:!shadow-[inset_4px_0_0_0_var(--sidebar-primary)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text-icon"><path d="M12 7v14"/><path d="M16 12h2"/><path d="M16 8h2"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/><path d="M6 12h2"/><path d="M6 8h2"/></svg>
+            Advisors
+        </button>
+
+        <!-- Support -->
+        <button hlmBtn variant="ghost" 
+            class="flex items-center gap-2 w-full justify-start mb-3 p-2 rounded-md cursor-pointer transition-all duration-300 border border-white/10 bg-white/5 text-sidebar-foreground/85 shadow-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-primary/50 hover:shadow-md" 
+            routerLink="/support" 
+            routerLinkActive="!bg-sidebar-accent !text-sidebar-accent-foreground !border-sidebar-primary/50 font-medium !shadow-[inset_4px_0_0_0_var(--sidebar-primary)] hover:!shadow-[inset_4px_0_0_0_var(--sidebar-primary)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-badge-question-mark-icon"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+            Support
+        </button>
+
+      </div>
+
+    </div>
+    
+</hlm-sidebar>
