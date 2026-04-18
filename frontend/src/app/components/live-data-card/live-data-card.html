@@ -1,0 +1,109 @@
+<section hlmCard>
+    <div hlmCardHeader class="flex flex-row items-center justify-between border-b border-border/50 pb-4">
+        <div>
+            <h3 hlmCardTitle class="text-2xl text-foreground">
+                Overview for: <span class="text-primary">{{ displayRegion() }}</span>
+            </h3>
+        </div>
+    </div>
+
+    <div hlmCardContent class="pt-6">
+        @if (isLoading()) {
+        <div class="flex items-center justify-center h-48">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+        }
+
+        @else if (errorMessage()) {
+        <div class="flex flex-col items-center justify-center h-48 text-center px-4 animate-in fade-in duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-destructive mb-4" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <p class="text-lg font-semibold text-foreground">Data Retrieval Failed</p>
+            <p class="text-sm text-muted-foreground mt-1">{{ errorMessage() }}</p>
+        </div>
+        }
+
+        @else if (liveMetrics()) {
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in duration-500">
+
+            <div
+                class="md:col-span-1 flex flex-col justify-center p-6 border shadow-sm rounded-2xl border-border bg-card/50">
+                <p class="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">Overall Air
+                    Quality</p>
+                <div class="flex items-end gap-4">
+                    <span class="text-6xl font-extrabold tracking-tighter text-foreground">{{
+                        liveMetrics()?.aqiScore }}</span>
+
+                    <div class="mb-2 px-3 py-1 text-sm font-bold rounded-full select-none transition-colors"
+                        [class]="getStatusColorClass(liveMetrics()?.status)">
+                        {{ liveMetrics()?.status }}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-4">
+
+                <div class="p-4 border shadow-sm rounded-xl border-border bg-card/50 flex flex-col justify-between">
+                    <p class="text-xs font-medium text-muted-foreground">PM10</p>
+                    <p class="text-2xl font-bold mt-2">
+                        {{ liveMetrics()?.particles?.pm10 ?? 'N/A' }}
+                        @if (liveMetrics()?.particles?.pm10 !== null) { <span
+                            class="text-xs font-normal text-muted-foreground">µg/m³</span> }
+                    </p>
+                </div>
+
+                <div class="p-4 border shadow-sm rounded-xl border-border bg-card/50 flex flex-col justify-between">
+                    <p class="text-xs font-medium text-muted-foreground">PM2.5</p>
+                    <p class="text-2xl font-bold mt-2">
+                        {{ liveMetrics()?.particles?.pm25 ?? 'N/A' }}
+                        @if (liveMetrics()?.particles?.pm25 !== null) { <span
+                            class="text-xs font-normal text-muted-foreground">µg/m³</span> }
+                    </p>
+                </div>
+
+                <div class="p-4 border shadow-sm rounded-xl border-border bg-card/50 flex flex-col justify-between">
+                    <p class="text-xs font-medium text-muted-foreground">NO2 (Nitrogen Dioxide)</p>
+                    <p class="text-2xl font-bold mt-2">
+                        {{ liveMetrics()?.particles?.no2 ?? 'N/A' }}
+                        @if (liveMetrics()?.particles?.no2 !== null) { <span
+                            class="text-xs font-normal text-muted-foreground">µg/m³</span> }
+                    </p>
+                </div>
+
+                <div class="p-4 border shadow-sm rounded-xl border-border bg-card/50 flex flex-col justify-between">
+                    <p class="text-xs font-medium text-muted-foreground">NO (Nitric Oxide)</p>
+                    <p class="text-2xl font-bold mt-2">
+                        {{ liveMetrics()?.particles?.no ?? 'N/A' }}
+                        @if (liveMetrics()?.particles?.no !== null) { <span
+                            class="text-xs font-normal text-muted-foreground">µg/m³</span> }
+                    </p>
+                </div>
+
+                <div class="p-4 border shadow-sm rounded-xl border-border bg-card/50 flex flex-col justify-between">
+                    <p class="text-xs font-medium text-muted-foreground">O3 (Ozone)</p>
+                    <p class="text-2xl font-bold mt-2">
+                        {{ liveMetrics()?.particles?.o3 ?? 'N/A' }}
+                        @if (liveMetrics()?.particles?.o3 !== null) { <span
+                            class="text-xs font-normal text-muted-foreground">µg/m³</span> }
+                    </p>
+                </div>
+
+                <div class="p-4 border shadow-sm rounded-xl border-border bg-card/50 flex flex-col justify-between">
+                    <p class="text-xs font-medium text-muted-foreground">CO (Carbon Monoxide)</p>
+                    <p class="text-2xl font-bold mt-2">
+                        {{ liveMetrics()?.particles?.co ?? 'N/A' }}
+                        @if (liveMetrics()?.particles?.co !== null) { <span
+                            class="text-xs font-normal text-muted-foreground">mg/m³</span> }
+                    </p>
+                </div>
+
+            </div>
+        </div>
+        }
+    </div>
+</section>

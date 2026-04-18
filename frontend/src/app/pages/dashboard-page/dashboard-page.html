@@ -1,5 +1,6 @@
 <div class="flex flex-col gap-8 p-6 md:p-10 max-w-7xl mx-auto">
 
+    <!-- Banner section -->
     <section
         class="relative overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-md transition-all duration-300">
 
@@ -15,16 +16,16 @@
                 <div
                     class="inline-flex items-center gap-2 px-3 py-1 mb-2 text-sm font-medium rounded-full bg-primary-foreground/10 text-primary-foreground">
                     <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-                    Live Environment Sync
+                    Operational Status: Live
                 </div>
 
                 <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
-                    Welcome to your Dashboard
+                    Environmental Analytics Overview
                 </h1>
 
                 <p class="text-lg text-primary-foreground/80 leading-relaxed">
-                    Let’s check the air you’re breathing. Select a municipality to explore real-time metrics, historical
-                    trends, and personalized insights for your area.
+                    Monitor the atmospheric health of your urban environment in real-time. Select a municipality below
+                    to generate localized air quality indices and review historical concentration trends.
                 </p>
             </div>
 
@@ -41,8 +42,16 @@
         </div>
     </section>
 
-    <section class="flex flex-col gap-4">
-        <h2 class="text-xl font-semibold tracking-tight text-foreground">Select your region</h2>
-    </section>
+    <ls-region-search (regionSelected)="onRegionSelect($event)"></ls-region-search>
+
+    @if (selectedRegion()) {
+    <div class="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+        <ls-live-data-card [region]="selectedRegion()!"></ls-live-data-card>
+
+        <ls-historical-chart [region]="selectedRegion()!"></ls-historical-chart>
+
+    </div>
+    }
 
 </div>
