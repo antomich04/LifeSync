@@ -1,14 +1,12 @@
 import json
-import asyncio
 import os
 import httpx
 from config.redis_client import get_redis_client
 from config.db_client import get_db_client
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from models.historical_aqi import HistoricalAqi
-
 
 LIVE_DATA_CACHE_TTL = 3600
 HISTORICAL_DATA_CACHE_TTL = 900
@@ -114,8 +112,7 @@ async def fetch_historical_aqi(municipality: str, year: int) -> dict:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Redis cache error: {e}")
 
-    #Runs db query in a separate thread to avoid blocking the event loop
-    result = await asyncio.to_thread(fetch_from_db, municipality, year)
+    result = await fetch_aqi_from_db(municipality, year)
 
     if not result:
         raise HTTPException(status_code=404, detail="No historical AQI data found.")
@@ -138,14 +135,27 @@ async def fetch_historical_aqi(municipality: str, year: int) -> dict:
 
     return response_data
 
-#Helper function to run the query in a separate thread
-def fetch_from_db(municipality: str, year: int):
-        engine = get_db_client()
-        with Session(engine) as session:
-            query = (
-                select(HistoricalAqi.month, HistoricalAqi.mean_aqi)
-                .where(HistoricalAqi.municipality == municipality)
-                .where(HistoricalAqi.year == year)
-                .order_by(HistoricalAqi.month)
-            )   
-            return session.execute(query).fetchall()
+async def fetch_aqi_from_db(municipality: str, year: int):
+    engine = get_db_client()
+    async with AsyncSession(engine) as session:
+        query = (
+            select(HistoricalAqi.month, HistoricalAqi.mean_aqi)
+            .where(HistoricalAqi.municipality == municipality)
+            .where(HistoricalAqi.year == year)
+            .order_by(HistoricalAqi.month)
+        )   
+        result = await session.execute(query)
+        return result.all()
+        
+
+async def fetch_available_years(municipality: str) -> list:
+    engine = get_db_client()
+    async with AsyncSession(engine) as session:
+        query = (
+            select(HistoricalAqi.year)
+            .where(HistoricalAqi.municipality == municipality)
+            .distinct()
+            .order_by(HistoricalAqi.year.asc())
+        )
+        result = await session.execute(query)
+        return [row for row in result.scalars().all()]

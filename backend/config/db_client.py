@@ -1,10 +1,10 @@
-from sqlalchemy import create_engine, Engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 from dotenv import load_dotenv
 import os
 
-_db_client: Engine | None = None
+_db_client: AsyncEngine | None = None
 
-def get_db_client() -> Engine:
+def get_db_client() -> AsyncEngine:
     global _db_client
 
     if _db_client is None:
@@ -13,6 +13,6 @@ def get_db_client() -> Engine:
         if not db_url:
             raise RuntimeError("DB_URL is not configured.")
 
-        _db_client = create_engine(db_url)
+        _db_client = create_async_engine(db_url)
 
     return _db_client

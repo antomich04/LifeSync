@@ -1,7 +1,13 @@
 from fastapi import APIRouter, Query
-from services.aqi_service import fetch_live_data, fetch_historical_aqi
+from services.aqi_service import fetch_live_data, fetch_historical_aqi, fetch_available_years
 
 router = APIRouter(prefix="/api")
+
+@router.get("/available-years")
+async def fetch_available_years_endpoint(
+    municipality: str = Query(..., description="Name of the municipality")
+):
+    return await fetch_available_years(municipality)
 
 @router.get("/region-live")
 async def fetch_live_data_endpoint(
