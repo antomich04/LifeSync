@@ -24,14 +24,14 @@
 
             <li>
                 <button (click)="prevYear()" 
-                        [disabled]="selectedYear() === availableYears[0]"
+                        [disabled]="selectedYear() === availableYears()[0]" 
                         class="inline-flex items-center select-none justify-center cursor-pointer rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 gap-1 disabled:opacity-50 disabled:pointer-events-none">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="m15 18-6-6 6-6"/></svg>
                     <span class="hidden sm:block">Previous</span>
                 </button>
             </li>
 
-            @for (year of availableYears; track year) {
+            @for (year of availableYears(); track year) {
                 <li class="hidden sm:block">
                     <button (click)="selectYear(year)"
                             class="inline-flex items-center select-none justify-center cursor-pointer rounded-md text-sm font-medium transition-colors h-9 w-9"
@@ -46,7 +46,7 @@
 
             <li>
                 <button (click)="nextYear()" 
-                        [disabled]="selectedYear() === availableYears[availableYears.length - 1]"
+                        [disabled]="selectedYear() === availableYears()[availableYears().length - 1]"
                         class="inline-flex items-center select-none justify-center cursor-pointer rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 gap-1 disabled:opacity-50 disabled:pointer-events-none">
                     <span class="hidden sm:block">Next</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="m9 18 6-6-6-6"/></svg>

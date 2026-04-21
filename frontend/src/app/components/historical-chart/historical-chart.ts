@@ -20,16 +20,16 @@ export class HistoricalChartComponent {
   @Input({ required: true }) 
   set region(value: string) {
     this._region = value;
-    //Every time the region changes, fetches data for the currently selected year
-    this.fetchData(this.selectedYear()); 
+    //When the region changes, fetches the available years first
+    this.initRegionData(value); 
   }
   get region(): string {
     return this._region;
   }
 
   //UI State
-  public readonly availableYears = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
-  public readonly selectedYear = signal<number>(2024);
+  public readonly availableYears = signal<number[]>([]);
+  public readonly selectedYear = signal<number>(0);
   public readonly aqiData = signal<(number | null)[]>([]);
   public readonly errorMessage = signal<string | null>(null);
 
@@ -44,6 +44,7 @@ export class HistoricalChartComponent {
         {
           data: dataPoints as number[],
           label: `Average AQI (${year})`,
+          spanGaps: true,
           fill: true,
           tension: 0.4,
           borderColor: '#10b981',
@@ -70,6 +71,33 @@ export class HistoricalChartComponent {
     }
   };
 
+  private initRegionData(region: string) {
+    this.errorMessage.set(null);
+    this.availableYears.set([]);
+    this.aqiData.set(new Array(12).fill(null));
+
+    this.aqiService.getAvailableYears(region)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (years: number[]) => {
+          if (!years || years.length === 0) {
+            this.errorMessage.set(`No historical data found for ${region}.`);
+            return;
+          }
+
+          this.availableYears.set(years);
+          
+          const latestYear = years[years.length - 1]; 
+          this.selectedYear.set(latestYear);
+          
+          this.fetchData(latestYear);
+        },
+        error: () => {
+          this.errorMessage.set('Failed to load available years. Please check your connection.');
+        }
+      });
+  }
+
   //Pagination Handlers
   public selectYear(year: number) {
     this.selectedYear.set(year);
@@ -78,8 +106,12 @@ export class HistoricalChartComponent {
 
   public prevYear() {
     const current = this.selectedYear();
-    if (current > this.availableYears[0]) {
-      const newYear = current - 1;
+    const years = this.availableYears();
+    const currentIndex = years.indexOf(current);
+    
+    //Safely jumps to the previous index instead of just doing year - 1
+    if (currentIndex > 0) {
+      const newYear = years[currentIndex - 1];
       this.selectedYear.set(newYear);
       this.fetchData(newYear);
     }
@@ -87,18 +119,21 @@ export class HistoricalChartComponent {
 
   public nextYear() {
     const current = this.selectedYear();
-    if (current < this.availableYears[this.availableYears.length - 1]) {
-      const newYear = current + 1;
+    const years = this.availableYears();
+    const currentIndex = years.indexOf(current);
+    
+    //Safely jumps to the next index
+    if (currentIndex !== -1 && currentIndex < years.length - 1) {
+      const newYear = years[currentIndex + 1];
       this.selectedYear.set(newYear);
       this.fetchData(newYear);
     }
   }
 
   private fetchData(year: number) {
-    //Safety check: region isn't set yet
     if (!this.region) return; 
 
-    this.errorMessage.set(null); //Clears previous errors
+    this.errorMessage.set(null); 
 
     this.aqiService.getHistoricalAqi(this.region, year)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -107,7 +142,6 @@ export class HistoricalChartComponent {
           this.aqiData.set(response.data);
         },
         error: (err) => {
-          //Empties the chart and displays the error message safely
           this.aqiData.set(new Array(12).fill(null));
           this.errorMessage.set(`No data available for ${this.region} in ${year}.`);
         }

@@ -36,4 +36,8 @@ export class AqiService {
     return this.httpClient.get<LiveAirQualityData>(`${environment.apiUrl}/region-live?lat=${lat}&lon=${lon}`);
   }
 
+  getAvailableYears(region: string): Observable<number[]> {
+    return this.httpClient.get<number[]>(`${environment.apiUrl}/available-years?municipality=${region}`);
+  }
+
 }
