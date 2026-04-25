@@ -2,7 +2,16 @@ import { Component, Input, computed, signal, inject, DestroyRef } from '@angular
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
-import { AqiService, HistoricalAqiResponse } from '../../services/aqiService';
+import { forkJoin } from 'rxjs';
+import { AqiService } from '../../services/aqiService';
+import { ParticlesService, HistoricalParticleResponse } from '../../services/particlesService';
+
+export interface TabOption {
+  id: string;
+  label: string;
+  color: string;
+  bgColor: string;
+}
 
 @Component({
   selector: 'ls-historical-chart',
@@ -14,13 +23,13 @@ import { AqiService, HistoricalAqiResponse } from '../../services/aqiService';
 export class HistoricalChartComponent {
 
   private aqiService = inject(AqiService);
+  private particlesService = inject(ParticlesService);
   private destroyRef = inject(DestroyRef);
 
   private _region!: string;
   @Input({ required: true }) 
   set region(value: string) {
     this._region = value;
-    //When the region changes, fetches the available years first
     this.initRegionData(value); 
   }
   get region(): string {
@@ -31,74 +40,160 @@ export class HistoricalChartComponent {
   public readonly availableYears = signal<number[]>([]);
   public readonly selectedYear = signal<number>(0);
   public readonly aqiData = signal<(number | null)[]>([]);
+  public readonly particleData = signal<HistoricalParticleResponse | null>(null);
   public readonly errorMessage = signal<string | null>(null);
 
-  //Reactive Chart Data
+  public readonly tabs: TabOption[] = [
+    { id: 'AQI', label: 'Mean AQI', color: '#10b981', bgColor: 'rgba(16, 185, 129, 0.1)' },
+    { id: 'NO2', label: 'NO₂', color: '#f59e0b', bgColor: 'rgba(245, 158, 11, 0.1)' },
+    { id: 'O3', label: 'O₃', color: '#3b82f6', bgColor: 'rgba(59, 130, 246, 0.1)' },
+    { id: 'CO', label: 'CO', color: '#6b7280', bgColor: 'rgba(107, 114, 128, 0.1)' },
+    { id: 'SO2', label: 'SO₂', color: '#8b5cf6', bgColor: 'rgba(139, 92, 246, 0.1)' }
+  ];
+
+  public selectedTab = signal<TabOption>(this.tabs[0]);
+
+  public selectTab(tab: TabOption) {
+    this.selectedTab.set(tab);
+  }
+
+  //Maps the correct array based on the active tab
   public readonly chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-    const year = this.selectedYear();
-    const dataPoints = this.aqiData();
+    const activeTab = this.selectedTab();
+    const pData = this.particleData();
+
+    let chartLabels: string[] = [];
+    let datasetData: (number | null)[] = [];
+
+    //Helper array for safe date mapping
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    if (activeTab.id === 'AQI') {
+      chartLabels = monthNames;
+      datasetData = this.aqiData();
+    } else if (pData) {
+      //Maps the 365 "YYYY-MM-DD" strings securely into short month names
+      chartLabels = pData.dates.map(dateStr => {
+        const monthIndex = parseInt(dateStr.split('-')[1], 10) - 1;
+        return monthNames[monthIndex];
+      });
+      
+      if (activeTab.id === 'NO2') datasetData = pData.no2;
+      if (activeTab.id === 'O3') datasetData = pData.o3;
+      if (activeTab.id === 'CO') datasetData = pData.co;
+      if (activeTab.id === 'SO2') datasetData = pData.so2;
+    }
 
     return {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      labels: chartLabels,
       datasets: [
         {
-          data: dataPoints as number[],
-          label: `Average AQI (${year})`,
-          spanGaps: true,
+          label: activeTab.label,
+          data: datasetData,
+          borderColor: activeTab.color,
+          backgroundColor: activeTab.bgColor,
+          pointBackgroundColor: activeTab.color,
+          pointBorderColor: '#fff',
+          pointRadius: activeTab.id === 'AQI' ? 3 : 0, 
+          pointHoverRadius: activeTab.id === 'AQI' ? 5 : 4,
           fill: true,
           tension: 0.4,
-          borderColor: '#10b981',
-          backgroundColor: 'rgba(16, 185, 129, 0.1)',
-          pointBackgroundColor: '#006064',
-          pointBorderColor: '#fff',
-          pointHoverBackgroundColor: '#fff',
-          pointHoverBorderColor: '#006064'
+          spanGaps: true
         }
       ]
     };
   });
 
-  public lineChartOptions: ChartOptions<'line'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: true, position: 'top', labels: { usePointStyle: true, font: { family: 'inherit', size: 13 } } },
-      tooltip: { mode: 'index', intersect: false, backgroundColor: 'rgba(26, 36, 33, 0.9)', titleFont: { size: 13 }, bodyFont: { size: 14, weight: 'bold' }, padding: 12, cornerRadius: 8 }
-    },
-    scales: {
-      y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' }, border: { display: false }, suggestedMax: 100 },
-      x: { grid: { display: false }, border: { display: false } }
+  //Re-adjusts the ceiling based on your db queries
+  public readonly chartOptions = computed<ChartOptions<'line'>>(() => {
+    const activeTab = this.selectedTab();
+    
+    const pData = this.particleData(); 
+    
+    let yAxisMax = 100;
+    switch (activeTab.id) {
+      case 'AQI': yAxisMax = 60; break;
+      case 'NO2': yAxisMax = 40; break;  
+      case 'O3': yAxisMax = 130; break;  
+      case 'CO': yAxisMax = 500; break;  
+      case 'SO2': yAxisMax = 15; break;  
     }
-  };
+
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: { 
+          backgroundColor: 'rgba(26, 36, 33, 0.9)', 
+          titleFont: { size: 13 }, 
+          bodyFont: { size: 14, weight: 'bold' }, 
+          padding: 12, 
+          cornerRadius: 8,
+          
+          callbacks: {
+            title: (tooltipItems) => {
+              //Gets the exact index of the hovered point
+              const dataIndex = tooltipItems[0].dataIndex;
+              
+              if (activeTab.id === 'AQI') {
+                //For AQI, the label is already the month name
+                return tooltipItems[0].label; 
+              } else if (pData && pData.dates) {
+                //For particles, grabs the exact date string
+                return pData.dates[dataIndex];
+              }
+              return tooltipItems[0].label;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { 
+          beginAtZero: true, 
+          grid: { color: 'rgba(0, 0, 0, 0.05)' }, 
+          border: { display: false }, 
+          suggestedMax: yAxisMax 
+        },
+        x: { 
+          grid: { display: false }, 
+          border: { display: false },
+          ticks: { 
+            maxTicksLimit: 12,
+            maxRotation: 0 
+          } 
+        }
+      }
+    };
+  });
 
   private initRegionData(region: string) {
-    this.errorMessage.set(null);
-    this.availableYears.set([]);
-    this.aqiData.set(new Array(12).fill(null));
-
     this.aqiService.getAvailableYears(region)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (years: number[]) => {
-          if (!years || years.length === 0) {
-            this.errorMessage.set(`No historical data found for ${region}.`);
-            return;
+        next: (years) => {
+          if (years && years.length > 0) {
+            const sortedYears = years.sort((a, b) => a - b);
+            this.availableYears.set(sortedYears);
+            
+            const latestYear = sortedYears[sortedYears.length - 1];
+            this.selectedYear.set(latestYear);
+            this.fetchData(latestYear);
+          } else {
+            this.availableYears.set([]);
+            this.aqiData.set([]);
+            this.particleData.set(null);
+            this.errorMessage.set(`No historical data available for ${region}.`);
           }
-
-          this.availableYears.set(years);
-          
-          const latestYear = years[years.length - 1]; 
-          this.selectedYear.set(latestYear);
-          
-          this.fetchData(latestYear);
         },
-        error: () => {
-          this.errorMessage.set('Failed to load available years. Please check your connection.');
+        error: (err) => {
+          console.error('Failed to fetch available years', err);
+          this.errorMessage.set('Failed to load historical data timeframe.');
         }
       });
   }
 
-  //Pagination Handlers
   public selectYear(year: number) {
     this.selectedYear.set(year);
     this.fetchData(year);
@@ -108,8 +203,6 @@ export class HistoricalChartComponent {
     const current = this.selectedYear();
     const years = this.availableYears();
     const currentIndex = years.indexOf(current);
-    
-    //Safely jumps to the previous index instead of just doing year - 1
     if (currentIndex > 0) {
       const newYear = years[currentIndex - 1];
       this.selectedYear.set(newYear);
@@ -121,8 +214,6 @@ export class HistoricalChartComponent {
     const current = this.selectedYear();
     const years = this.availableYears();
     const currentIndex = years.indexOf(current);
-    
-    //Safely jumps to the next index
     if (currentIndex !== -1 && currentIndex < years.length - 1) {
       const newYear = years[currentIndex + 1];
       this.selectedYear.set(newYear);
@@ -135,17 +226,22 @@ export class HistoricalChartComponent {
 
     this.errorMessage.set(null); 
 
-    this.aqiService.getHistoricalAqi(this.region, year)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response: HistoricalAqiResponse) => {
-          this.aqiData.set(response.data);
-        },
-        error: (err) => {
-          this.aqiData.set(new Array(12).fill(null));
-          this.errorMessage.set(`No data available for ${this.region} in ${year}.`);
-        }
-      });
+    //Hits both APIs at the same time and waits until both respond
+    forkJoin({
+      aqi: this.aqiService.getHistoricalAqi(this.region, year),
+      particles: this.particlesService.getHistoricalParticles(this.region, year)
+    })
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
+      next: (result) => {
+        //Hydrates both signals
+        this.aqiData.set(result.aqi.data);
+        this.particleData.set(result.particles);
+      },
+      error: (err) => {
+        console.error('Failed to fetch historical data', err);
+        this.errorMessage.set('Could not load historical data for this year.');
+      }
+    });
   }
-
 }

@@ -2,7 +2,7 @@
     <div hlmCardHeader class="flex flex-row items-center justify-between border-b border-border/50 pb-4">
         <div>
             <h3 hlmCardTitle class="text-2xl text-foreground">
-                Overview for: <span class="text-primary">{{ displayRegion() }}</span>
+                Overview for: <span class="text-primary">{{ displayRegion() }}*</span>
             </h3>
         </div>
     </div>
@@ -103,6 +103,11 @@
                 </div>
 
             </div>
+        </div>
+        <div class="mt-4 text-left">
+            <p class="text-xs text-muted-foreground italic">
+                * Live meteorological and pollutant data provided by the OpenWeather Air Pollution API.
+            </p>
         </div>
         }
     </div>

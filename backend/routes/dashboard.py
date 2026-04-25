@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Query
 from services.aqi_service import fetch_live_data, fetch_historical_aqi, fetch_available_years
+from services.particle_service import fetch_historical_particles
 
 router = APIRouter(prefix="/api")
 
@@ -22,3 +23,10 @@ async def fetch_historical_aqi_endpoint(
     year: int = Query(..., description="Year for which to fetch historical AQI data")
 ):
     return await fetch_historical_aqi(municipality, year)
+
+@router.get("/historical-particles")
+async def fetch_historical_particles_endpoint(
+    municipality: str = Query(..., description="Name of the municipality"),
+    year: int = Query(..., description="Year for which to fetch historical particle data")
+):
+    return await fetch_historical_particles(municipality, year)
