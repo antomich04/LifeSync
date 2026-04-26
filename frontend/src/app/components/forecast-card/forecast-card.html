@@ -1,0 +1,54 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 animate-in fade-in zoom-in-95 duration-300">
+    
+    <div class="p-6 border shadow-sm rounded-xl border-border bg-card/50 transition-all hover:shadow-md">
+        <p class="text-sm font-medium text-muted-foreground uppercase tracking-wider">7-Day Predicted Peak</p>
+        <div class="mt-4 flex items-end gap-2">
+            <span class="text-4xl font-bold text-foreground">{{ data.predictedPeak }}</span>
+            <span class="text-muted-foreground pb-1 font-medium">{{ data.unit }}</span>
+        </div>
+        <p class="mt-2 text-xs text-muted-foreground">Highest expected {{ pollutantName }} concentration.</p>
+    </div>
+    
+    <div class="p-6 border shadow-sm rounded-xl border-border bg-card/50 transition-all hover:shadow-md">
+        <p class="text-sm font-medium text-muted-foreground uppercase tracking-wider">Expected Trend</p>
+        <div class="mt-4 flex items-center gap-2" 
+             [class.text-emerald-500]="data.trend === 'Improving'" 
+             [class.text-amber-500]="data.trend === 'Stable'" 
+             [class.text-destructive]="data.trend === 'Worsening'">
+            
+            @if (data.trend === 'Improving') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                    <polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+            } @else if (data.trend === 'Worsening') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
+                    <polyline points="16 17 22 17 22 11"></polyline>
+                </svg>
+            } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            }
+            <span class="text-3xl font-bold">{{ data.trend }}</span>
+        </div>
+        <p class="mt-2 text-xs text-muted-foreground">Compared to the previous 7-day baseline.</p>
+    </div>
+
+    <div class="p-6 border shadow-sm rounded-xl border-border bg-card/50 transition-all hover:shadow-md">
+        <p class="text-sm font-medium text-muted-foreground uppercase tracking-wider">Model Confidence</p>
+        <div class="mt-4 flex flex-col gap-2">
+            <div class="flex justify-between items-end">
+                <span class="text-4xl font-bold text-foreground">{{ formattedConfidence }}%</span>
+            </div>
+            <div class="w-full bg-muted rounded-full h-2 mt-1 overflow-hidden">
+                <div class="bg-primary h-full rounded-full transition-all duration-1000 ease-out" 
+                     [style.width.%]="formattedConfidence"></div>
+            </div>
+        </div>
+        <p class="mt-2 text-xs text-muted-foreground">Based on historical variance and missing data ratios.</p>
+    </div>
+
+</div>

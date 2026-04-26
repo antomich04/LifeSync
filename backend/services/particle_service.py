@@ -17,7 +17,7 @@ async def fetch_historical_particles(municipality: str, year: int) -> dict:
         if cached_data:
             return json.loads(cached_data)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Redis cache error: {e}")
+        print(f"Redis cache error: {e}")
 
     
     engine = get_db_client()
@@ -68,6 +68,6 @@ async def fetch_historical_particles(municipality: str, year: int) -> dict:
         try:
             await redis_client.setex(redis_key, HISTORICAL_DATA_CACHE_TTL, json.dumps(response_data))
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Redis cache error: {e}")
+            print(f"Redis cache error: {e}")
 
         return response_data
