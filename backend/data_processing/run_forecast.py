@@ -56,19 +56,18 @@ def main():
                 model_data = muni_data[['date', pol]].copy()
                 model_data = model_data.rename(columns={'date': 'ds', pol: 'y'}).dropna()
                 
-                if len(model_data) < 30:
+                if len(model_data) < 60:
                     logging.warning(f"Skipping {muni} - {pol}: Not enough data ({len(model_data)} rows).")
                     continue
-                    
-                model_data['floor'] = 0
-                model_data['cap'] = max(model_data['y'].max() * 1.2, 5.0)
-                
-                m = Prophet(growth='logistic', yearly_seasonality=True, weekly_seasonality=True, daily_seasonality=False)
+
+                #Determines whether there is enough data for yearly seasonality
+                date_range_days = (model_data['ds'].max() - model_data['ds'].min()).days
+                use_yearly = date_range_days >= 330
+
+                m = Prophet(growth='linear',yearly_seasonality=use_yearly,weekly_seasonality=True,daily_seasonality=False)
                 m.fit(model_data)
                 
                 future = m.make_future_dataframe(periods=7)
-                future['floor'] = 0
-                future['cap'] = model_data['cap'].iloc[0]
                 forecast = m.predict(future)
                 
                 last_7_actual = model_data.tail(7)
@@ -85,15 +84,17 @@ def main():
                     trend = "Improving"
                 else:
                     trend = "Stable"
-                    
-                raw_margin = (next_7_pred['yhat_upper'] - next_7_pred['yhat_lower']) / next_7_pred['yhat']
+
+                #Guards against yhat values near zero causing division issues in confidence calc
+                safe_yhat = next_7_pred['yhat'].replace(0, float('nan'))
+                raw_margin = (next_7_pred['yhat_upper'] - next_7_pred['yhat_lower']) / safe_yhat
                 dampened_penalty = raw_margin.mean() / 3
                 confidence = float(max(0.60, min(0.98, 1 - dampened_penalty)))
                 
                 hist_dates = last_7_actual['ds'].dt.strftime('%Y-%m-%d').tolist()
                 hist_data = [round(val, 2) for val in last_7_actual['y'].tolist()]
                 fut_dates = next_7_pred['ds'].dt.strftime('%Y-%m-%d').tolist()
-                fut_data = [max(0, round(val, 2)) for val in next_7_pred['yhat'].tolist()] 
+                fut_data = [max(0, round(val, 2)) for val in next_7_pred['yhat'].tolist()]
                 
                 #DB upsert
                 stmt = insert(DailyAirForecast).values(
@@ -121,12 +122,14 @@ def main():
                     session.commit()
                     
                 success_count += 1
+                logging.info(f"  -> OK: {muni} - {pol} (trend: {trend}, confidence: {confidence:.2f})")
                 
             except Exception as e:
                 logging.error(f"Error processing {muni} - {pol}: {e}")
                 failure_count += 1
                 continue
 
+    logging.info(f"Done. Successes: {success_count}, Failures: {failure_count}")
 
 if __name__ == "__main__":
     main()
