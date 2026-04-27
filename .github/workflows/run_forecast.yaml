@@ -32,5 +32,5 @@ jobs:
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
           BASE_OPENWEATHER_API_URL: ${{ secrets.BASE_OPENWEATHER_API_URL }}
         run: |
-          python backend/data_processing/ingest_daily_data.py
+          python backend/data_processing/ingest_data.py
           python backend/data_processing/run_forecast.py
