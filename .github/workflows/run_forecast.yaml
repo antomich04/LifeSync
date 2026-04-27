@@ -1,0 +1,36 @@
+name: Daily Prophet Forecast
+
+on:
+  schedule:
+    #Runs at 02:00 UTC every day
+    - cron: '0 2 * * *'
+  
+  workflow_dispatch: 
+
+jobs:
+  run-forecast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'           
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Prophet pipeline
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          BASE_OPENWEATHER_API_URL: ${{ secrets.BASE_OPENWEATHER_API_URL }}
+        run: |
+          python backend/data_processing/ingest_daily_data.py
+          python backend/data_processing/run_forecast.py
