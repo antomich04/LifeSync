@@ -60,10 +60,15 @@ def main():
                     logging.warning(f"Skipping {muni} - {pol}: Not enough data ({len(model_data)} rows).")
                     continue
                     
-                m = Prophet(yearly_seasonality=True, weekly_seasonality=True, daily_seasonality=False)
+                model_data['floor'] = 0
+                model_data['cap'] = max(model_data['y'].max() * 1.2, 5.0)
+                
+                m = Prophet(growth='logistic', yearly_seasonality=True, weekly_seasonality=True, daily_seasonality=False)
                 m.fit(model_data)
                 
                 future = m.make_future_dataframe(periods=7)
+                future['floor'] = 0
+                future['cap'] = model_data['cap'].iloc[0]
                 forecast = m.predict(future)
                 
                 last_7_actual = model_data.tail(7)
@@ -74,9 +79,9 @@ def main():
                 past_avg = last_7_actual['y'].mean()
                 future_avg = next_7_pred['yhat'].mean()
                 
-                if future_avg > past_avg * 1.05:
+                if future_avg > past_avg * 1.15:
                     trend = "Worsening"
-                elif future_avg < past_avg * 0.95:
+                elif future_avg < past_avg * 0.85:
                     trend = "Improving"
                 else:
                     trend = "Stable"
