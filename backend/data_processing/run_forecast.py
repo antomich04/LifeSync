@@ -32,7 +32,7 @@ def main():
     SYNC_DB_URL = db_url_raw.replace("+asyncpg", "")
     engine = create_engine(SYNC_DB_URL)
 
-    query = "SELECT * FROM historical_particles ORDER BY date;"
+    query = "SELECT * FROM historical_particles WHERE date >= '2025-01-01' ORDER BY date;"
     df = pd.read_sql(query, engine)
     df['date'] = pd.to_datetime(df['date'])
     
