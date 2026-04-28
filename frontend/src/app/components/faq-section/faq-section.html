@@ -1,0 +1,56 @@
+<section class="flex flex-col gap-4">
+
+    <div>
+        <h2 class="text-xl font-semibold tracking-tight text-foreground">Frequently Asked Questions</h2>
+        <p class="text-sm text-muted-foreground mt-1">Quick answers to the most common questions.</p>
+    </div>
+
+    <div class="flex flex-col gap-3">
+
+        @for (faq of faqs; track faq.id) {
+        <div
+            class="p-5 border border-border rounded-2xl bg-card shadow-sm hover:border-primary/30 hover:shadow-md transition-all duration-200 cursor-pointer"
+            (click)="toggleFaq(faq.id)">
+
+            <div class="flex items-start justify-between gap-3">
+                <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-primary" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                            <path d="M12 17h.01" />
+                        </svg>
+                    </div>
+                    <p class="text-sm font-semibold text-foreground leading-snug pt-1">{{ faq.question }}</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4 flex-shrink-0 text-muted-foreground transition-transform duration-200 mt-1"
+                    [class.rotate-180]="expandedFaq() === faq.id"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            </div>
+
+            @if (expandedFaq() === faq.id) {
+            <div class="mt-3 pl-11 animate-in fade-in slide-in-from-top-2 duration-200">
+                <p class="text-sm text-muted-foreground leading-relaxed">{{ faq.answer }}</p>
+                <button (click)="onAskChatbot(faq.question, $event)"
+                    class="inline-flex items-center gap-1.5 mt-3 text-xs font-medium text-primary hover:underline cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    Ask Lucy for more details
+                </button>
+            </div>
+            }
+
+        </div>
+        }
+
+    </div>
+
+</section>
