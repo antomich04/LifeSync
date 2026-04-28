@@ -21,6 +21,19 @@ try:
 except ImportError:
     sys.exit(1)
 
+#Rolling mean is used for low-variance pollutants where Prophet struggles to fit.
+def run_rolling_mean(model_data, past_avg):
+
+    #Takes the average of the last 14 days and projects it forward as a flat line.
+    rolling_mean = round(float(model_data['y'].tail(14).mean()), 2)
+    fut_data = [rolling_mean] * 7
+    predicted_peak = rolling_mean
+    future_avg = rolling_mean
+
+    confidence = 0.75
+    
+    return fut_data, predicted_peak, future_avg, confidence
+
 def main():
     
     load_dotenv()
@@ -45,9 +58,6 @@ def main():
         'so2': 'µg/m³'
     }
 
-    success_count = 0
-    failure_count = 0
-
     for muni in municipalities:
         muni_data = df[df['municipality'] == muni]
         
@@ -60,24 +70,51 @@ def main():
                     logging.warning(f"Skipping {muni} - {pol}: Not enough data ({len(model_data)} rows).")
                     continue
 
-                #Determines whether there is enough data for yearly seasonality
-                date_range_days = (model_data['ds'].max() - model_data['ds'].min()).days
-                use_yearly = date_range_days >= 330
-
-                m = Prophet(growth='linear',yearly_seasonality=use_yearly,weekly_seasonality=True,daily_seasonality=False)
-                m.fit(model_data)
-                
-                future = m.make_future_dataframe(periods=7)
-                forecast = m.predict(future)
-                
                 last_7_actual = model_data.tail(7)
-                next_7_pred = forecast.tail(7)
-                
-                current_value = float(last_7_actual['y'].iloc[-1])
-                predicted_peak = float(next_7_pred['yhat'].max())
+                hist_dates = last_7_actual['ds'].dt.strftime('%Y-%m-%d').tolist()
+                hist_data = [round(val, 2) for val in last_7_actual['y'].tolist()]
                 past_avg = last_7_actual['y'].mean()
-                future_avg = next_7_pred['yhat'].mean()
-                
+
+                #Coefficient of variation, used to determine if the pollutant is well suited for Prophet
+                mean_val = model_data['y'].mean()
+                cv = model_data['y'].std() / mean_val if mean_val > 0 else 0
+
+                logging.info(f"  -> {muni} - {pol}: CV={cv:.2f}, mean={mean_val:.2f}, past_7_avg={past_avg:.2f}")
+
+                if cv < 0.15:
+                    fut_data, predicted_peak, future_avg, confidence = run_rolling_mean(model_data, past_avg)
+
+                else:
+                    #Uses most recent 45 days to reduce noise from potential older noise
+                    recent_cutoff = model_data['ds'].max() - pd.Timedelta(days=45)
+                    prophet_data = model_data[model_data['ds'] >= recent_cutoff].copy()
+
+                    m = Prophet(growth='linear',yearly_seasonality=False,weekly_seasonality=True,daily_seasonality=False)
+                    m.fit(prophet_data)
+                    
+                    future = m.make_future_dataframe(periods=7)
+                    forecast = m.predict(future)
+                    next_7_pred = forecast.tail(7)
+
+                    #Clamps to 0 as linear growth can produce small negatives at the tail
+                    fut_data = [max(0, round(val, 2)) for val in next_7_pred['yhat'].tolist()]
+
+                    #Clamps predicted_peak to 0 as yhat can be negative for low-signal pollutants
+                    predicted_peak = float(max(0, next_7_pred['yhat'].max()))
+                    future_avg = next_7_pred['yhat'].mean()
+                    
+                    #Safety check to see if predicted peak is different from recent average
+                    if past_avg > 0 and abs(predicted_peak - past_avg) > past_avg * 0.4:
+
+                        #Big difference between predicted peak and recent average, uses rolling mean instead
+                        fut_data, predicted_peak, future_avg, confidence = run_rolling_mean(model_data, past_avg)
+                    else:
+                        #Guard against yhat values near zero causing division issues in confidence calculation
+                        safe_yhat = next_7_pred['yhat'].replace(0, float('nan'))
+                        raw_margin = (next_7_pred['yhat_upper'] - next_7_pred['yhat_lower']) / safe_yhat
+                        dampened_penalty = raw_margin.mean() / 3
+                        confidence = float(max(0.60, min(0.98, 1 - dampened_penalty)))
+
                 if future_avg > past_avg * 1.15:
                     trend = "Worsening"
                 elif future_avg < past_avg * 0.85:
@@ -85,17 +122,12 @@ def main():
                 else:
                     trend = "Stable"
 
-                #Guards against yhat values near zero causing division issues in confidence calc
-                safe_yhat = next_7_pred['yhat'].replace(0, float('nan'))
-                raw_margin = (next_7_pred['yhat_upper'] - next_7_pred['yhat_lower']) / safe_yhat
-                dampened_penalty = raw_margin.mean() / 3
-                confidence = float(max(0.60, min(0.98, 1 - dampened_penalty)))
-                
-                hist_dates = last_7_actual['ds'].dt.strftime('%Y-%m-%d').tolist()
-                hist_data = [round(val, 2) for val in last_7_actual['y'].tolist()]
-                fut_dates = next_7_pred['ds'].dt.strftime('%Y-%m-%d').tolist()
-                fut_data = [max(0, round(val, 2)) for val in next_7_pred['yhat'].tolist()]
-                
+                current_value = float(last_7_actual['y'].iloc[-1])
+                fut_dates = [
+                    (model_data['ds'].max() + pd.Timedelta(days=i)).strftime('%Y-%m-%d')
+                    for i in range(1, 8)
+                ]
+
                 #DB upsert
                 stmt = insert(DailyAirForecast).values(
                     municipality=muni,
@@ -120,16 +152,11 @@ def main():
                 with Session(engine) as session:
                     session.execute(upsert_stmt)
                     session.commit()
-                    
-                success_count += 1
-                logging.info(f"  -> OK: {muni} - {pol} (trend: {trend}, confidence: {confidence:.2f})")
                 
             except Exception as e:
                 logging.error(f"Error processing {muni} - {pol}: {e}")
-                failure_count += 1
                 continue
 
-    logging.info(f"Done. Successes: {success_count}, Failures: {failure_count}")
 
 if __name__ == "__main__":
     main()
