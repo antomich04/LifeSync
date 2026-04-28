@@ -11,6 +11,7 @@ import { REGION_NAMES } from '../../shared/region_coordinates';
 export class RegionSearchComponent {
   
   private readonly allRegions = REGION_NAMES;
+  public readonly allRegionsCount = this.allRegions.length;
 
   public readonly isDropdownOpen = signal(false);
   public readonly searchQuery = signal('');
