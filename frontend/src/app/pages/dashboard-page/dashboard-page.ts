@@ -10,10 +10,16 @@ import { HistoricalChartComponent } from '../../components/historical-chart/hist
   templateUrl: './dashboard-page.html'
 })
 export class DashboardPage {
-  
+
   public readonly selectedRegion = signal<string | null>(null);
 
-  //Catches the string emitted by region search component
+  //Shown as quick-pick chips in the empty state
+  public readonly quickPicks = [
+    'Thessaloniki',
+    'Kalamaria',
+    'Ampelokipoi-Menemeni',
+  ];
+
   public onRegionSelect(region: string) {
     this.selectedRegion.set(region);
   }
