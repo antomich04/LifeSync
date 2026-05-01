@@ -6,9 +6,9 @@
     </div>
 
     <hlm-command class="w-full border shadow-sm rounded-2xl border-border bg-card overflow-hidden transition-all"
-        (searchChange)="onSearch($event)" (focusin)="isDropdownOpen.set(true)" (focusout)="onFocusOut($event)">
+        (searchChange)="onSearch($event)" (focusout)="onFocusOut($event)" (click)="focusInput()">
 
-        <hlm-command-input placeholder="Search municipality…" (click)="isDropdownOpen.set(true)" />
+        <hlm-command-input #commandInput placeholder="Search municipality…" />
 
         <hlm-command-list [class.hidden]="!isDropdownOpen()" class="max-h-[400px] border-t border-border">
 
