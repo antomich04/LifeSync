@@ -1,0 +1,48 @@
+<div class="min-h-screen flex flex-col items-center justify-center p-6 bg-background relative overflow-hidden">
+
+    <!-- Ambient blobs -->
+    <div class="absolute -top-40 -right-40 w-[36rem] h-[36rem] bg-primary/5 rounded-full blur-3xl pointer-events-none">
+    </div>
+    <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Content -->
+    <div
+        class="relative z-10 flex flex-col items-center gap-8 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+        <!-- 404 number + message -->
+        <div class="flex flex-col items-center gap-4">
+            <span
+                class="text-[8rem] sm:text-[10rem] font-extrabold tracking-tighter leading-none text-foreground select-none">
+                404
+            </span>
+            <p class="text-muted-foreground text-base leading-relaxed max-w-sm">
+                The page you were looking for doesn't exist or may have been moved.
+                Try heading back to a known location.
+            </p>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row items-center gap-3">
+            <button routerLink="/"
+                class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-sm hover:opacity-90 active:scale-95 transition-all duration-150 cursor-pointer select-none">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                Back to Home Page
+            </button>
+            <button (click)="goBack()"
+                class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-border bg-background hover:bg-accent hover:text-accent-foreground font-medium text-sm transition-colors cursor-pointer select-none">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m12 19-7-7 7-7" />
+                    <path d="M19 12H5" />
+                </svg>
+                Go Back
+            </button>
+        </div>
+
+    </div>
+
+</div>

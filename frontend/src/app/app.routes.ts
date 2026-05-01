@@ -4,6 +4,7 @@ import { DashboardPage } from './pages/dashboard-page/dashboard-page';
 import { ForecastPage } from './pages/forecast-page/forecast-page';
 import { AdvisorsPage } from './pages/advisors-page/advisors-page';
 import { SupportPage } from './pages/support-page/support-page';
+import { NotFoundPage } from './pages/not-found-page/not-found-page';
 
 export const routes: Routes = [
     {
@@ -25,10 +26,9 @@ export const routes: Routes = [
     {
         path: "support",
         component: SupportPage
+    },
+    {
+        path: "**",
+        component: NotFoundPage
     }
-
-    // {
-    //     path: "**",
-    //     component: NotFoundPage
-    // }
 ];
