@@ -7,6 +7,7 @@ import pandas as pd
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
+from sqlalchemy.pool import NullPool
 
 #Sets up logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -46,7 +47,7 @@ def main():
         sys.exit(1)
         
     SYNC_DB_URL = db_url_raw.replace("+asyncpg", "")
-    engine = create_engine(SYNC_DB_URL)
+    engine = create_engine(SYNC_DB_URL, poolclass=NullPool)
     
     #target end date
     yesterday = (datetime.now(timezone.utc) - timedelta(days=1)).date()
