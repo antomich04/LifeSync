@@ -5,6 +5,7 @@ import { RegionSearchComponent } from '../../components/region-searchbar/region-
 import { ForecastCard } from '../../components/forecast-card/forecast-card';
 import { PredictiveChartComponent } from '../../components/predictive-chart/predictive-chart';
 import { ForecastService, RegionForecast, PollutantForecast } from '../../services/forecastService';
+import { AppSessionService } from '../../services/appSessionService'
 
 export interface TabOption {
   id: 'no2' | 'o3' | 'co' | 'so2';
@@ -21,6 +22,7 @@ export interface TabOption {
 export class ForecastPage {
 
   private forecastService = inject(ForecastService);
+  private sessionService = inject(AppSessionService);
   private destroyRef = inject(DestroyRef);
 
   //UI state
@@ -72,6 +74,8 @@ export class ForecastPage {
 
           this.forecastData.set(data);
           this.isLoading.set(false);
+          //Pushes the values so that they can be injected from advisors page
+          this.sessionService.setContext(region, data);
         },
         error: () => {
           this.errorMessage.set(`Could not load the predictive forecast for ${region}.`);
