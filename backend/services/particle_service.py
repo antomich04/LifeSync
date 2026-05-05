@@ -6,7 +6,7 @@ from config.redis_client import get_redis_client
 from config.db_client import get_db_client
 from models.historical_particles import HistoricalParticle 
 
-HISTORICAL_DATA_CACHE_TTL = 900
+HISTORICAL_DATA_CACHE_TTL = 900 #15 minutes
 
 async def fetch_historical_particles(municipality: str, year: int) -> dict:
     redis_key = f"particles:historical:{municipality}:{year}"

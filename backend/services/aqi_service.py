@@ -8,8 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from models.historical_aqi import HistoricalAqi
 
-LIVE_DATA_CACHE_TTL = 3600
-HISTORICAL_DATA_CACHE_TTL = 900
+LIVE_DATA_CACHE_TTL = 3600 #1 hour
+HISTORICAL_DATA_CACHE_TTL = 900 #15 minutes 
 
 async def fetch_live_data(lat: float, lon: float) -> dict:
     redis_key = f"aqi:live:{lat}:{lon}"

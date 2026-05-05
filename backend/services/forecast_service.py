@@ -7,7 +7,7 @@ from config.redis_client import get_redis_client
 from config.db_client import get_db_client
 from models.daily_air_forecast import DailyAirForecast
 
-FORECAST_CACHE_TTL = 43200
+FORECAST_CACHE_TTL = 43200 #12 hours
 
 async def fetch_forecast(municipality: str) -> dict:
     redis_key = f"forecast:{municipality}"
