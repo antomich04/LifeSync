@@ -1,13 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PollutantForecast } from '../../services/forecastService';
-
-const SAFE_LIMITS: Record<string, number> = {
-  'NO₂': 40,
-  'O₃': 100,
-  CO: 4000, //µg/m³, equivalent of 4 mg/m³
-  'SO₂': 20,
-};
+import { SAFE_LIMITS, getPeakStatus } from '../../shared/pollutant-limits';
 
 @Component({
   selector: 'ls-forecast-card',
@@ -43,11 +37,7 @@ export class ForecastCard {
   }
 
   public getPeakRatioLabel(): string {
-    const ratio = this.data.predictedPeak / this.safeLimit;
-    if (ratio <= 0.6) return 'Well within limit';
-    if (ratio <= 0.85) return 'Approaching limit';
-    if (ratio <= 1.0) return 'Near limit';
-    return 'Exceeds limit';
+    return getPeakStatus(this.data.predictedPeak, this.safeLimit);
   }
 
   public getPeakRatioClass(): string {

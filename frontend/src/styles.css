@@ -143,3 +143,29 @@
     color: var(--foreground);
   }
 }
+
+@layer components {
+  /* Restores spacing and size for Iris's pollutant headers */
+  .report-markdown h3 {
+    @apply text-xl font-bold mt-8 mb-3 text-foreground;
+  }
+
+  /* Restores paragraph spacing */
+  .report-markdown p {
+    @apply mb-4 leading-relaxed text-foreground/90;
+  }
+
+  /* Restores clickable links using your primary Brand colors! */
+  .report-markdown a {
+    @apply text-primary font-medium underline underline-offset-4 transition-colors hover:opacity-80;
+  }
+
+  /* Just in case Iris uses lists or bold text */
+  .report-markdown strong {
+    @apply font-bold text-foreground;
+  }
+  
+  .report-markdown ul {
+    @apply list-disc list-inside mb-4 space-y-1 text-foreground/90;
+  }
+}

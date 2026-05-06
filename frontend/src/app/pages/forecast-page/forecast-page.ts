@@ -5,7 +5,8 @@ import { RegionSearchComponent } from '../../components/region-searchbar/region-
 import { ForecastCard } from '../../components/forecast-card/forecast-card';
 import { PredictiveChartComponent } from '../../components/predictive-chart/predictive-chart';
 import { ForecastService, RegionForecast, PollutantForecast } from '../../services/forecastService';
-import { AppSessionService } from '../../services/appSessionService'
+import { AppSessionService, PollutantRiskSummary } from '../../services/appSessionService';
+import { SAFE_LIMITS, getPeakStatus } from '../../shared/pollutant-limits';
 
 export interface TabOption {
   id: 'no2' | 'o3' | 'co' | 'so2';
@@ -20,7 +21,6 @@ export interface TabOption {
   templateUrl: './forecast-page.html'
 })
 export class ForecastPage {
-
   private forecastService = inject(ForecastService);
   private sessionService = inject(AppSessionService);
   private destroyRef = inject(DestroyRef);
@@ -41,9 +41,9 @@ export class ForecastPage {
   //Chart tabs
   public readonly tabs: TabOption[] = [
     { id: 'no2', label: 'NO₂', color: '#c2410c' },
-    { id: 'o3',  label: 'O₃',  color: '#006064' },
-    { id: 'co',  label: 'CO',  color: '#78909c' },
-    { id: 'so2', label: 'SO₂', color: '#4f46e5' }
+    { id: 'o3', label: 'O₃', color: '#006064' },
+    { id: 'co', label: 'CO', color: '#78909c' },
+    { id: 'so2', label: 'SO₂', color: '#4f46e5' },
   ];
   public readonly selectedTab = signal<TabOption>(this.tabs[0]);
 
@@ -67,20 +67,24 @@ export class ForecastPage {
     this.forecastData.set(null);
     this.errorMessage.set(null);
 
-    this.forecastService.fetchForecast(region)
+    this.forecastService
+      .fetchForecast(region)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => {
-
           this.forecastData.set(data);
           this.isLoading.set(false);
-          //Pushes the values so that they can be injected from advisors page
-          this.sessionService.setContext(region, data);
+
+          const p = data.predictions;
+          const riskSummary: PollutantRiskSummary = {
+            no2: getPeakStatus(p.no2.predictedPeak, SAFE_LIMITS['NO₂']),
+            o3: getPeakStatus(p.o3.predictedPeak, SAFE_LIMITS['O₃']),
+            co: getPeakStatus(p.co.predictedPeak, SAFE_LIMITS['CO']),
+            so2: getPeakStatus(p.so2.predictedPeak, SAFE_LIMITS['SO₂']),
+          };
+
+          this.sessionService.setContext(region, data, riskSummary);
         },
-        error: () => {
-          this.errorMessage.set(`Could not load the predictive forecast for ${region}.`);
-          this.isLoading.set(false);
-        }
       });
   }
 }

@@ -1,16 +1,23 @@
 from typing import Dict
 from models.pollutant_forecast import PollutantForecast
+from langchain_core.messages import HumanMessage
+from agents.graph import master_graph
 
 async def run_iris_agent(region: str, forecast_data: Dict[str, PollutantForecast]) -> str:
-
-    pollutants_list = ", ".join(forecast_data.keys())
     
-    #Mock Response
-    mock_markdown = f"""### 🌬️ Iris Report for {region}
+    #Converts pydantic models to dictionaries so the llm can parse them easier in the prompt
+    formatted_forecast = {k: v.model_dump() for k, v in forecast_data.items()}
     
-I have analyzed the predictions for: **{pollutants_list}**.
-
-Once the LangGraph agent is built, I will replace this text with a real educational summary and YouTube links based on the specific `predictedPeak` and `trend` of these pollutants!
-    """
+    initial_state = {
+        "messages": [HumanMessage(content="Please write my air quality report.")],
+        "region": region,
+        "forecast_data": formatted_forecast
+    }
     
-    return mock_markdown
+    #Runs the graph asynchronously
+    final_state = await master_graph.ainvoke(initial_state)
+    
+    #Extracts the final text from the last message in the state
+    final_markdown = final_state["messages"][-1].content
+    
+    return final_markdown

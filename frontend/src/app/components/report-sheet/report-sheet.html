@@ -12,8 +12,8 @@
             </p>
         </hlm-sheet-header>
 
-        <div class="py-6 prose prose-sm dark:prose-invert max-w-none">
-            <markdown [data]="markdownContent()"></markdown>
+        <div class="py-6 prose prose-sm dark:prose-invert max-w-none report-markdown">
+            <markdown [data]="markdownContent()" ngPreserveWhitespaces [disableSanitizer]="true"></markdown>
         </div>
 
         <hlm-sheet-footer>
