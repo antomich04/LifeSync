@@ -31,8 +31,9 @@ export class AdvisorsPage {
 
   activeSheetState = signal<'closed' | 'open'>('closed');
   activeAgentName = signal<string>('');
-  activeReportContent = signal<string>('');
-  activeProducts = signal<any[]>([]);
+  activeReportContent = signal<string>(this.sessionService.activeContext()?.latestIrisReport || '');
+  
+  activeProducts = signal<any[]>(this.sessionService.activeContext()?.latestHermesProducts || []);
 
   public readonly activePollutants = computed<Pollutant[]>(() => {
     const actionable = this.sessionService.actionablePollutants();
@@ -146,7 +147,11 @@ export class AdvisorsPage {
         next: (res) => {
           this.irisState.set('done');
           this.activeAgentName.set('Iris');
-          this.activeReportContent.set(res.data.markdown_report);
+          
+          const report = res.data.markdown_report;
+          this.activeReportContent.set(report);
+          this.sessionService.updateAgentData('iris', report);
+          
           this.activeSheetState.set('open');
         },
         error: () => this.irisState.set('idle'),
@@ -157,8 +162,11 @@ export class AdvisorsPage {
         next: (res) => {
           this.hermesState.set('done');
           this.activeAgentName.set('Hermes');
-          this.activeReportContent.set(''); 
-          this.activeProducts.set(res.data.products);
+          
+          const products = res.data.products;
+          this.activeProducts.set(products);
+          this.sessionService.updateAgentData('hermes', products);
+          
           this.activeSheetState.set('open');
         },
         error: () => this.hermesState.set('idle'),

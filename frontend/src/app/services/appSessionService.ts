@@ -14,11 +14,36 @@ export interface AppSessionContext {
   region: string;
   forecastData: RegionForecast;
   riskSummary: PollutantRiskSummary;
+  latestIrisReport?: string;
+  latestHermesProducts?: any[];
+}
+
+const STORAGE_KEY = 'lifeSync_activeContext';
+
+//Helper function to fetch from local storage during initialization
+function getInitialContext(): AppSessionContext | null {
+
+  if (typeof window !== 'undefined' && window.localStorage) {
+
+    const stored = localStorage.getItem(STORAGE_KEY);
+
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        console.error('Failed to parse stored context', e);
+        return null;
+      }
+    }
+
+  }
+  return null;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AppSessionService {
-  public readonly activeContext = signal<AppSessionContext | null>(null);
+  //Initializes the signal with local storage data
+  public readonly activeContext = signal<AppSessionContext | null>(getInitialContext());
 
   public readonly actionablePollutants = computed<Record<string, PollutantForecast>>(() => {
     const context = this.activeContext();
@@ -43,10 +68,39 @@ export class AppSessionService {
   });
 
   setContext(region: string, forecastData: RegionForecast, riskSummary: PollutantRiskSummary): void {
-    this.activeContext.set({ region, forecastData, riskSummary });
+    const contextPayload = { region, forecastData, riskSummary };
+    
+    this.activeContext.set(contextPayload);
+    
+    //Persists to local storage
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(contextPayload));
+    }
+  }
+
+  //Fetches latest insights for both agents
+  updateAgentData(agent: 'iris' | 'hermes', data: any): void {
+    const currentContext = this.activeContext();
+    if (!currentContext) return;
+
+    //Clones the current context and appends the new data
+    const updatedContext = { ...currentContext };
+    if (agent === 'iris') updatedContext.latestIrisReport = data;
+    if (agent === 'hermes') updatedContext.latestHermesProducts = data;
+
+    this.activeContext.set(updatedContext);
+    
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedContext));
+    }
   }
 
   clearContext(): void {
     this.activeContext.set(null);
+    
+    //Removes from local storage
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem(STORAGE_KEY);
+    }
   }
 }
