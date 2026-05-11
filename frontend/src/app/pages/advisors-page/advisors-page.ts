@@ -90,7 +90,7 @@ export class AdvisorsPage {
       }
       return { 
         title: `Ready to search for ${pollutants.length} pollutant(s)`, 
-        content: 'Click "Ask Hermes to Shop" to scan Skroutz and BestPrice for live mitigation products.', 
+        content: 'Click "Ask Hermes to Shop" to scan Skroutz for live mitigation products.', 
         items: [] 
       };
     }
@@ -161,13 +161,14 @@ export class AdvisorsPage {
       this.hermesService.run_hermes(payload).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (res) => {
           this.hermesState.set('done');
-          this.activeAgentName.set('Hermes');
           
           const products = res.data.products;
           this.activeProducts.set(products);
           this.sessionService.updateAgentData('hermes', products);
           
-          this.activeSheetState.set('open');
+          toast('🛒 Hermes finished shopping', { 
+            description: `Found ${products.length} product recommendations for your area.` 
+          });
         },
         error: () => this.hermesState.set('idle'),
       });

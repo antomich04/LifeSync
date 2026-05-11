@@ -4,8 +4,7 @@
 
         <hlm-sheet-header>
             <h3 hlmSheetTitle class="flex items-center gap-2 text-xl font-bold">
-                <span class="w-2.5 h-2.5 rounded-full animate-pulse" 
-                      [ngClass]="agentName() === 'Hermes' ? 'bg-orange-500' : 'bg-primary'"></span>
+                <span class="w-2.5 h-2.5 rounded-full animate-pulse" ></span>
                 Report from {{ agentName() }}
             </h3>
             <p hlmSheetDescription>
@@ -18,36 +17,6 @@
             @if (agentName() === 'Iris') {
                 <div class="prose prose-sm dark:prose-invert max-w-none report-markdown">
                     <markdown [data]="markdownContent()" ngPreserveWhitespaces [disableSanitizer]="true"></markdown>
-                </div>
-            }
-
-            @if (agentName() === 'Hermes') {
-                <div class="flex flex-col gap-4">
-                    @for (product of products(); track product.name) {
-                        <a [href]="product.url" target="_blank" rel="noopener noreferrer" 
-                           class="flex items-center gap-4 p-4 rounded-xl border border-border/60 bg-muted/20 hover:bg-muted/50 hover:border-orange-500/30 transition-all group cursor-pointer">
-                            
-                            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center group-hover:scale-105 transition-transform">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path [attr.d]="getIconPath(product.icon)" />
-                                </svg>
-                            </div>
-                            
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-bold text-foreground truncate group-hover:text-orange-500 transition-colors">{{ product.name }}</p>
-                                <p class="text-xs text-muted-foreground mt-0.5">{{ product.reason }}</p>
-                            </div>
-                            
-                            <div class="flex flex-col items-end gap-1 flex-shrink-0">
-                                <span class="text-sm font-extrabold text-orange-600 dark:text-orange-400">{{ product.price }}</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-muted-foreground group-hover:text-orange-500 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                                    <polyline points="15 3 21 3 21 9" />
-                                    <line x1="10" x2="21" y1="14" y2="3" />
-                                </svg>
-                            </div>
-                        </a>
-                    }
                 </div>
             }
 
