@@ -44,6 +44,7 @@ async def fetch_live_data(lat: float, lon: float) -> dict:
         current_data = owm_data["list"][0]
         aqi_index = current_data["main"]["aqi"]
         components = current_data["components"]
+        co_raw = clean_value(components.get("co"))
 
         #Maps it to the expected interface
         frontend_payload = {
@@ -52,9 +53,9 @@ async def fetch_live_data(lat: float, lon: float) -> dict:
             "particles": {
                 "pm10": clean_value(components.get("pm10")),
                 "pm25": clean_value(components.get("pm2_5")),
-                "no": clean_value(components.get("no")),
+                "so2": clean_value(components.get("so2")),
                 "no2": clean_value(components.get("no2")),
-                "co": clean_value(components.get("co")),
+                "co": round(co_raw / 1000, 2) if co_raw is not None else None,
                 "o3": clean_value(components.get("o3"))
             }
         }

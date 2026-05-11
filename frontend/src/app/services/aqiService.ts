@@ -15,7 +15,7 @@ export interface LiveAirQualityData {
   particles: {
     pm10: number | null;
     pm25: number | null;
-    no: number | null;
+    so2: number | null;
     no2: number | null;
     co: number | null;
     o3: number | null;
