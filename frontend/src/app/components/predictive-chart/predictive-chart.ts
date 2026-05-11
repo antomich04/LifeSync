@@ -84,7 +84,7 @@ export class PredictiveChartComponent {
     let yAxisMax = 100;
     switch (pollutantName) {
       case 'NO₂':
-        yAxisMax = 20;
+        yAxisMax = 5;
         break;
       case 'O₃':
         yAxisMax = 130;

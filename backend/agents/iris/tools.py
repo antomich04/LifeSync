@@ -4,21 +4,20 @@ from langchain_community.tools import WikipediaQueryRun
 from langchain_community.utilities import WikipediaAPIWrapper
 from googleapiclient.discovery import build
 
-wikipedia = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=1500))
+wikipedia = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=800))
 youtube = build('youtube', 'v3', developerKey=os.getenv("YOUTUBE_API_KEY"))
 
 @tool
 def search_web_for_health_effects(pollutant: str) -> str:
     """Searches Wikipedia for the health effects of a specific air pollutant."""
 
-    query = f"{pollutant} pollutant health effects"
+    query = f"{pollutant}"
 
     try:
 
         content = wikipedia.invoke({"query": query})
-        wiki_url = f"https://en.wikipedia.org/w/index.php?search={query.replace(' ', '+')}"
 
-        return f"{content}\n\nSource URL: {wiki_url}"
+        return f"{content}\n\nSource URL: {content}"
     
     except Exception as e:
         return f"Could not fetch data for {pollutant}. Error: {str(e)}"
@@ -27,7 +26,7 @@ def search_web_for_health_effects(pollutant: str) -> str:
 def search_youtube_for_lesson(pollutant: str) -> str:
     """Searches YouTube for a short, educational video explaining the health effects of a specific air pollutant."""
 
-    query = f"{pollutant} air pollution health effects"
+    query = f"What is {pollutant} and how does it affect human lives"
 
     try:
 

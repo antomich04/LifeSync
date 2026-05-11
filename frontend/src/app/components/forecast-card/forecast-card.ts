@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PollutantForecast } from '../../services/forecastService';
-import { SAFE_LIMITS, getPeakStatus } from '../../shared/pollutant-limits';
+import { SAFE_LIMITS, getPeakStatus } from '../../shared/pollutant_limits';
 
 @Component({
   selector: 'ls-forecast-card',

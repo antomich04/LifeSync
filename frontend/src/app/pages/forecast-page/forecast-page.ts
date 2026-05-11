@@ -6,7 +6,7 @@ import { ForecastCard } from '../../components/forecast-card/forecast-card';
 import { PredictiveChartComponent } from '../../components/predictive-chart/predictive-chart';
 import { ForecastService, RegionForecast, PollutantForecast } from '../../services/forecastService';
 import { AppSessionService, PollutantRiskSummary } from '../../services/appSessionService';
-import { SAFE_LIMITS, getPeakStatus } from '../../shared/pollutant-limits';
+import { SAFE_LIMITS, getPeakStatus } from '../../shared/pollutant_limits';
 
 export interface TabOption {
   id: 'no2' | 'o3' | 'co' | 'so2';
