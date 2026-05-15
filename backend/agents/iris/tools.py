@@ -1,24 +1,26 @@
 import os
 from langchain_core.tools import tool
-from langchain_community.tools import WikipediaQueryRun
 from langchain_community.utilities import WikipediaAPIWrapper
 from googleapiclient.discovery import build
 
-wikipedia = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=800))
+wiki_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=800)
 youtube = build('youtube', 'v3', developerKey=os.getenv("YOUTUBE_API_KEY"))
 
 @tool
 def search_web_for_health_effects(pollutant: str) -> str:
     """Searches Wikipedia for the health effects of a specific air pollutant."""
-
-    query = f"{pollutant}"
-
     try:
-
-        content = wikipedia.invoke({"query": query})
-
-        return f"{content}\n\nSource URL: {content}"
-    
+        docs = wiki_wrapper.load(pollutant)
+        
+        if docs:
+            content = docs[0].page_content
+            #Extracts the url from the metadata
+            url = docs[0].metadata.get("source", f"https://en.wikipedia.org/wiki/{pollutant.replace(' ', '_')}")
+            
+            return f"{content}\n\nSource URL: {url}"
+        else:
+            return f"No Wikipedia article found for {pollutant}."
+            
     except Exception as e:
         return f"Could not fetch data for {pollutant}. Error: {str(e)}"
 

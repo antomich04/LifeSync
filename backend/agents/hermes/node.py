@@ -3,6 +3,7 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import END
 from agents.hermes.tools import hermes_tools_list
 from agents.state import AgentState
+
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, max_tokens=800).bind_tools(hermes_tools_list, strict=True).bind(response_format={"type": "json_object"})
 
 def hermes_think(state: AgentState):
