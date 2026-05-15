@@ -18,6 +18,7 @@ async def run_hermes_agent(region: str, forecast_data: Dict[str, PollutantForeca
         "messages": [HumanMessage(content="Find me protection products.")],
         "region": region,
         "forecast_data": formatted_forecast,
+        "target_agent": "hermes"
     }
 
     final_state = await master_graph.ainvoke(initial_state)

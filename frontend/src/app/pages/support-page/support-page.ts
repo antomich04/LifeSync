@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FaqSectionComponent } from '../../components/faq-section/faq-section';
+import { ChatbotService } from '../../services/chatbotService';
 
 @Component({
   selector: 'ls-support-page',
@@ -10,6 +11,8 @@ import { FaqSectionComponent } from '../../components/faq-section/faq-section';
 })
 export class SupportPage {
 
+  private chatbotService = inject(ChatbotService);
+
   supportTips: string[] = [
     'Try asking Lucy first - she resolves most questions instantly.',
     'Include your email address and a clear description of the issue.',
@@ -18,12 +21,10 @@ export class SupportPage {
   ];
 
   openChat(): void {
-    // TODO: call chatbot service to open chat panel
-    console.log('Open chatbot');
+    this.chatbotService.openChat();
   }
 
   openChatWithPrompt(prompt: string): void {
-    // TODO: call chatbot service with a pre-filled prompt
-    console.log('Open chatbot with prompt:', prompt);
+    this.chatbotService.openChatWithPrompt(prompt);
   }
 }

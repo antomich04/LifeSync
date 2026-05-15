@@ -6,3 +6,4 @@ class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
     region: str
     forecast_data: Dict[str, dict]
+    target_agent: str

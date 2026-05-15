@@ -11,7 +11,8 @@ async def run_iris_agent(region: str, forecast_data: Dict[str, PollutantForecast
     initial_state = {
         "messages": [HumanMessage(content="Please write my air quality report.")],
         "region": region,
-        "forecast_data": formatted_forecast
+        "forecast_data": formatted_forecast,
+        "target_agent": "iris"
     }
     
     #Runs the graph asynchronously
