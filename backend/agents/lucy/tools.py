@@ -3,11 +3,8 @@ from langchain_core.tools import tool
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
-
-# NEW: Import your SQLAlchemy model
 from models.daily_air_forecast import DailyAirForecast
 
-# Ensure we have the DB URL (adjust this to match your app's actual DB config)
 load_dotenv()
 db_url_raw = os.getenv('DB_URL', '')
 SYNC_DB_URL = db_url_raw.replace("+asyncpg", "") if db_url_raw else ""
@@ -25,16 +22,13 @@ def get_air_quality_forecast(region: str) -> str:
 
     try:
         with Session(engine) as session:
-            # NEW: Use SQLAlchemy ORM instead of raw string SQL!
             stmt = select(DailyAirForecast).where(DailyAirForecast.municipality == region)
             
-            # Execute and extract the model instances
             results = session.execute(stmt).scalars().all()
             
             if not results:
                 return f"I couldn't find any recent air quality data for {region}."
 
-            # Format the data into a clean string for Lucy to read
             report_lines = [f"Live & Forecasted Air Quality Data for {region}:"]
             
             for row in results:
@@ -50,7 +44,6 @@ def get_air_quality_forecast(region: str) -> str:
                     f"(Trend: {trend})"
                 )
 
-            # Join it all together for the LLM
             return "\n".join(report_lines)
 
     except Exception as e:

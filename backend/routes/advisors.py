@@ -62,7 +62,7 @@ async def invoke_lucy(payload: LucyRequest):
     """
     try:
         result = await run_lucy_agent(
-            messages=payload.messages,
+            base_messages=payload.messages,
             region=payload.region
         )
         return AgentResponse(
