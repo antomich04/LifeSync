@@ -44,11 +44,11 @@ export class HistoricalChartComponent {
   public readonly errorMessage = signal<string | null>(null);
 
   public readonly tabs: TabOption[] = [
-    { id: 'AQI', label: 'Mean AQI', color: '#10b981', bgColor: 'rgba(16, 185, 129, 0.1)' },
-    { id: 'NO2', label: 'NO₂', color: '#c2410c', bgColor: 'rgba(194, 65, 12, 0.1)' }, 
+    { id: 'AQI', label: 'Mean AQI', color: '#2e7d32', bgColor: 'rgba(46, 125, 50, 0.1)' },
+    { id: 'NO2', label: 'NO₂', color: '#00897b', bgColor: 'rgba(0, 137, 123, 0.1)' }, 
     { id: 'O3', label: 'O₃', color: '#006064', bgColor: 'rgba(0, 96, 100, 0.1)' },     
     { id: 'CO', label: 'CO', color: '#78909c', bgColor: 'rgba(120, 144, 156, 0.1)' },   
-    { id: 'SO2', label: 'SO₂', color: '#4f46e5', bgColor: 'rgba(79, 70, 229, 0.1)' }    
+    { id: 'SO2', label: 'SO₂', color: '#4f7d4a', bgColor: 'rgba(79, 125, 74, 0.1)' }    
   ];
 
   public selectedTab = signal<TabOption>(this.tabs[0]);

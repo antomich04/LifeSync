@@ -66,7 +66,7 @@ export class LiveDataCardComponent {
         label: 'PM10',
         value: metrics.particles?.pm10 ?? null,
         unit: 'µg/m³',
-        color: '#f97316',
+        color: 'var(--pollutant-pm)',
         safeMax: 45,
       },
       {
@@ -74,7 +74,7 @@ export class LiveDataCardComponent {
         label: 'PM2.5',
         value: metrics.particles?.pm25 ?? null,
         unit: 'µg/m³',
-        color: '#ef4444',
+        color: 'var(--pollutant-pm)',
         safeMax: 15,
       },
       {
@@ -82,7 +82,7 @@ export class LiveDataCardComponent {
         label: 'NO₂',
         value: metrics.particles?.no2 ?? null,
         unit: 'µg/m³',
-        color: '#c2410c',
+        color: 'var(--pollutant-no2)',
         safeMax: 25,
       },
       {
@@ -90,7 +90,7 @@ export class LiveDataCardComponent {
         label: 'SO₂',
         value: metrics.particles?.so2 ?? null,
         unit: 'µg/m³',
-        color: '#92400e',
+        color: 'var(--pollutant-so2)',
         safeMax: 40,
       },
       {
@@ -98,7 +98,7 @@ export class LiveDataCardComponent {
         label: 'O₃',
         value: metrics.particles?.o3 ?? null,
         unit: 'µg/m³',
-        color: '#0891b2',
+        color: 'var(--pollutant-o3)',
         safeMax: 100,
       },
       {
@@ -106,7 +106,7 @@ export class LiveDataCardComponent {
         label: 'CO',
         value: metrics.particles?.co ?? null,
         unit: 'mg/m³',
-        color: '#78716c',
+        color: 'var(--pollutant-co)',
         safeMax: 4,
       },
     ];
@@ -116,15 +116,15 @@ export class LiveDataCardComponent {
   public getStatusColorClass(status: string | undefined): string {
     switch (status) {
       case 'Good':
-        return 'text-emerald-700 bg-emerald-500/20';
+        return 'text-status-good bg-status-good/20';
       case 'Fair':
-        return 'text-yellow-700  bg-yellow-500/20';
+        return 'text-status-warning bg-status-warning/20';
       case 'Moderate':
-        return 'text-orange-700  bg-orange-500/20';
+        return 'text-status-caution bg-status-caution/20';
       case 'Unhealthy':
-        return 'text-red-700     bg-red-500/20';
+        return 'text-status-danger bg-status-danger/20';
       case 'Very Unhealthy':
-        return 'text-rose-900  bg-rose-500/20';
+        return 'text-status-critical bg-status-critical/20';
       default:
         return 'text-muted-foreground bg-muted';
     }
@@ -141,11 +141,11 @@ export class LiveDataCardComponent {
 
   public getArcColor(score: number | undefined): string {
     const s = score ?? 0;
-    if (s <= 50) return '#10b981'; //Good
-    if (s <= 100) return '#eab308'; //Fair
-    if (s <= 150) return '#f97316'; //Moderate
-    if (s <= 200) return '#ef4444'; //Unhealthy
-    return '#e11d48'; //Very Unhealthy
+    if (s <= 50) return 'var(--status-good)'; //Good
+    if (s <= 100) return 'var(--status-warning)'; //Fair
+    if (s <= 150) return 'var(--status-caution)'; //Moderate
+    if (s <= 200) return 'var(--status-danger)'; //Unhealthy
+    return 'var(--status-critical)'; //Very Unhealthy
   }
 
   //Threshold bar helper methods
@@ -156,11 +156,11 @@ export class LiveDataCardComponent {
   }
 
   public getThresholdColor(value: number | null, safeMax: number): string {
-    if (value === null) return '#6b7280';
+    if (value === null) return 'var(--muted-foreground)';
     const ratio = value / safeMax;
-    if (ratio <= 0.6) return '#10b981'; //well within limits
-    if (ratio <= 0.85) return '#f59e0b'; //approaching limit
-    if (ratio <= 1.0) return '#f97316'; //near limit
-    return '#ef4444'; //exceeded
+    if (ratio <= 0.6) return 'var(--status-good)'; //well within limits
+    if (ratio <= 0.85) return 'var(--status-warning)'; //approaching limit
+    if (ratio <= 1.0) return 'var(--status-caution)'; //near limit
+    return 'var(--status-danger)'; //exceeded
   }
 }

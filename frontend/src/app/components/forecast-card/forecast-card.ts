@@ -30,10 +30,10 @@ export class ForecastCard {
 
   public getPeakBarColor(): string {
     const ratio = this.data.predictedPeak / this.safeLimit;
-    if (ratio <= 0.6) return '#10b981';
-    if (ratio <= 0.85) return '#f59e0b';
-    if (ratio <= 1.0) return '#f97316';
-    return '#ef4444';
+    if (ratio <= 0.6) return 'var(--status-good)';
+    if (ratio <= 0.85) return 'var(--status-warning)';
+    if (ratio <= 1.0) return 'var(--status-caution)';
+    return 'var(--status-danger)';
   }
 
   public getPeakRatioLabel(): string {
@@ -42,10 +42,10 @@ export class ForecastCard {
 
   public getPeakRatioClass(): string {
     const ratio = this.data.predictedPeak / this.safeLimit;
-    if (ratio <= 0.6) return 'text-emerald-600';
-    if (ratio <= 0.85) return 'text-amber-600';
-    if (ratio <= 1.0) return 'text-orange-600';
-    return 'text-red-600';
+    if (ratio <= 0.6) return 'text-status-good';
+    if (ratio <= 0.85) return 'text-status-warning';
+    if (ratio <= 1.0) return 'text-status-caution';
+    return 'text-status-danger';
   }
 
   //Trend card helper methods
@@ -53,44 +53,44 @@ export class ForecastCard {
   public getTrendBgClass(): string {
     switch (this.data.trend) {
       case 'Improving':
-        return 'bg-emerald-500/5 border-emerald-500/20';
+        return 'bg-status-good/5 border-status-good/20';
       case 'Worsening':
-        return 'bg-red-500/5 border-red-500/20';
+        return 'bg-status-danger/5 border-status-danger/20';
       default:
-        return 'bg-amber-500/5 border-amber-500/20';
+        return 'bg-status-warning/5 border-status-warning/20';
     }
   }
 
   public getTrendTextClass(): string {
     switch (this.data.trend) {
       case 'Improving':
-        return 'text-emerald-600 dark:text-emerald-400';
+        return 'text-status-good';
       case 'Worsening':
-        return 'text-red-600 dark:text-red-400';
+        return 'text-status-danger';
       default:
-        return 'text-amber-600 dark:text-amber-400';
+        return 'text-status-warning';
     }
   }
 
   public getTrendIconBgClass(): string {
     switch (this.data.trend) {
       case 'Improving':
-        return 'bg-emerald-500/15';
+        return 'bg-status-good/15';
       case 'Worsening':
-        return 'bg-red-500/15';
+        return 'bg-status-danger/15';
       default:
-        return 'bg-amber-500/15';
+        return 'bg-status-warning/15';
     }
   }
 
   public getTrendIconClass(): string {
     switch (this.data.trend) {
       case 'Improving':
-        return 'text-emerald-500';
+        return 'text-status-good';
       case 'Worsening':
-        return 'text-red-500';
+        return 'text-status-danger';
       default:
-        return 'text-amber-500';
+        return 'text-status-warning';
     }
   }
 
@@ -98,22 +98,22 @@ export class ForecastCard {
 
   public getConfidenceBarColor(): string {
     const c = this.formattedConfidence;
-    if (c >= 80) return '#10b981';
-    if (c >= 60) return '#f59e0b';
-    return '#ef4444';
+    if (c >= 80) return 'var(--status-good)';
+    if (c >= 60) return 'var(--status-warning)';
+    return 'var(--status-danger)';
   }
 
   public getConfidenceIconBgClass(): string {
     const c = this.formattedConfidence;
-    if (c >= 80) return 'bg-emerald-500/15';
-    if (c >= 60) return 'bg-amber-500/15';
-    return 'bg-red-500/15';
+    if (c >= 80) return 'bg-status-good/15';
+    if (c >= 60) return 'bg-status-warning/15';
+    return 'bg-status-danger/15';
   }
 
   public getConfidenceIconClass(): string {
     const c = this.formattedConfidence;
-    if (c >= 80) return 'text-emerald-500';
-    if (c >= 60) return 'text-amber-500';
-    return 'text-red-500';
+    if (c >= 80) return 'text-status-good';
+    if (c >= 60) return 'text-status-warning';
+    return 'text-status-danger';
   }
 }

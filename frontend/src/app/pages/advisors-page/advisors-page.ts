@@ -43,8 +43,8 @@ export class AdvisorsPage {
       key: labels[key],
       value: data.predictedPeak,
       unit: data.unit,
-      badgeClass: 'border-amber-400/40 bg-amber-400/10 text-amber-700 dark:text-amber-300',
-      dotClass: 'bg-amber-400'
+      badgeClass: 'border-status-warning/40 bg-status-warning/10 text-status-warning',
+      dotClass: 'bg-status-warning'
     }));
   });
 

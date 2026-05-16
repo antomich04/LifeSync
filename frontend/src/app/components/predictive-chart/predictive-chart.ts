@@ -1,6 +1,6 @@
-import { Component, Input, computed, signal } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { ChartConfiguration, ChartOptions, Plugin } from 'chart.js';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { PollutantForecast } from '../../services/forecastService';
 
 @Component({
@@ -11,25 +11,15 @@ import { PollutantForecast } from '../../services/forecastService';
   templateUrl: './predictive-chart.html',
 })
 export class PredictiveChartComponent {
-  private readonly _data = signal<PollutantForecast | null>(null);
-  private readonly _pollutantName = signal<string>('NO₂');
-  private readonly _color = signal<string>('#c2410c');
-
-  @Input({ required: true }) set data(value: PollutantForecast) {
-    this._data.set(value);
-  }
-  @Input({ required: true }) set pollutantName(value: string) {
-    this._pollutantName.set(value);
-  }
-  @Input({ required: true }) set color(value: string) {
-    this._color.set(value);
-  }
+  public readonly data = input.required<PollutantForecast>();
+  public readonly pollutantName = input.required<string>();
+  public readonly color = input.required<string>();
 
   //Reactive chart data
   public readonly chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-    const data = this._data();
-    const pollutantName = this._pollutantName();
-    const color = this._color();
+    const data = this.data();
+    const pollutantName = this.pollutantName();
+    const color = this.color();
 
     if (!data) return { labels: [], datasets: [] };
 
@@ -79,7 +69,7 @@ export class PredictiveChartComponent {
 
   //Reactive chart options
   public readonly chartOptions = computed<ChartOptions<'line'>>(() => {
-    const pollutantName = this._pollutantName();
+    const pollutantName = this.pollutantName();
 
     let yAxisMax = 100;
     switch (pollutantName) {

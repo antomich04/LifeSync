@@ -40,10 +40,10 @@ export class ForecastPage {
 
   //Chart tabs
   public readonly tabs: TabOption[] = [
-    { id: 'no2', label: 'NO₂', color: '#c2410c' },
+    { id: 'no2', label: 'NO₂', color: '#00897b' },
     { id: 'o3', label: 'O₃', color: '#006064' },
     { id: 'co', label: 'CO', color: '#78909c' },
-    { id: 'so2', label: 'SO₂', color: '#4f46e5' },
+    { id: 'so2', label: 'SO₂', color: '#4f7d4a' },
   ];
   public readonly selectedTab = signal<TabOption>(this.tabs[0]);
 

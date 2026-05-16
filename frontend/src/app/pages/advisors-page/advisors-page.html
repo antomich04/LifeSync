@@ -5,7 +5,7 @@
         class="relative overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-md transition-all duration-300">
 
         <div
-            class="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-white/10 rounded-full blur-3xl pointer-events-none">
+            class="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-primary-foreground/10 rounded-full blur-3xl pointer-events-none">
         </div>
         <div class="absolute -bottom-16 -left-16 w-64 h-64 bg-accent/20 rounded-full blur-2xl pointer-events-none">
         </div>
@@ -58,7 +58,7 @@
         <div class="flex flex-wrap gap-2">
             @if (activePollutants().length === 0) {
             <span
-                class="text-xs font-medium text-emerald-600 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                class="text-xs font-medium text-status-good bg-status-good/10 px-3 py-1 rounded-full border border-status-good/20">
                 All clear
             </span>
             } @else {
@@ -81,30 +81,30 @@
             (activate)="activateAgent($event)">
             
             @for (insight of [dynamicIrisInsight()]; track insight.title) {
-            <div class="p-4 rounded-xl border border-sky-500/20 bg-sky-500/5 flex flex-col gap-3 
+            <div class="p-4 rounded-xl border border-agent-iris/20 bg-agent-iris/5 flex flex-col gap-3 
                         animate-in fade-in zoom-in-95 duration-500">
                 
                 <div class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-sky-500 flex-shrink-0"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-agent-iris flex-shrink-0"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10" />
                         <path d="M12 16v-4" />
                         <path d="M12 8h.01" />
                     </svg>
-                    <p class="text-xs font-semibold text-sky-600 dark:text-sky-400">{{ insight.title }}</p>
+                    <p class="text-xs font-semibold text-agent-iris">{{ insight.title }}</p>
                 </div>
 
                 <p class="text-sm text-foreground leading-relaxed">
                     {{ insight.content }}
                 </p>
 
-                <div class="pt-2 mt-1 border-t border-sky-500/10">
+                <div class="pt-2 mt-1 border-t border-agent-iris/10">
                     @if (insight.links.length > 0) {
                     <div class="flex flex-wrap items-center gap-4 text-xs">
                         @for (link of insight.links; track link.url) {
                         <a [href]="link.url" target="_blank" rel="noopener noreferrer"
-                            class="flex items-center gap-1.5 text-sky-600 dark:text-sky-400 hover:text-sky-500 transition-colors font-medium hover:underline underline-offset-4">
+                            class="flex items-center gap-1.5 text-agent-iris hover:text-agent-iris/80 transition-colors font-medium hover:underline underline-offset-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
@@ -135,16 +135,16 @@
             (activate)="activateAgent($event)">
 
             @if (dynamicHermesInsight(); as insight) {
-            <div class="p-4 rounded-xl border border-orange-500/20 bg-orange-500/5 flex flex-col gap-3">
+            <div class="p-4 rounded-xl border border-agent-hermes/20 bg-agent-hermes/5 flex flex-col gap-3">
                 <div class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-orange-500 flex-shrink-0"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-agent-hermes flex-shrink-0"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
                         <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
                         <path d="M3 6h18" />
                         <path d="M16 10a4 4 0 0 1-8 0" />
                     </svg>
-                    <p class="text-xs font-semibold text-orange-600 dark:text-orange-400">{{ insight.title }}</p>
+                    <p class="text-xs font-semibold text-agent-hermes">{{ insight.title }}</p>
                 </div>
 
                 @if (insight.items.length === 0) {
@@ -159,8 +159,8 @@
                                 animate-in fade-in slide-in-from-right-8 duration-500 fill-mode-backwards"
                          [style.animation-delay.ms]="i * 150">
 
-                        <div class="flex-shrink-0 w-8 h-8 rounded-md bg-orange-500/10 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-orange-500" viewBox="0 0 24 24"
+                        <div class="flex-shrink-0 w-8 h-8 rounded-md bg-agent-hermes/10 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-agent-hermes" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
                                 <path [attr.d]="getHermesIconPath(product.icon)" />
@@ -176,7 +176,7 @@
 
                             @if (product.url) {
                             <a [href]="product.url" target="_blank" rel="noopener noreferrer"
-                                class="inline-flex items-center gap-1 mt-1 text-[10px] font-bold text-orange-600 dark:text-orange-400 hover:text-orange-500 hover:underline transition-colors w-fit">
+                                class="inline-flex items-center gap-1 mt-1 text-[10px] font-bold text-agent-hermes hover:text-agent-hermes/80 hover:underline transition-colors w-fit">
                                 {{ product.price }}
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -201,7 +201,7 @@
             <div class="flex items-center gap-2 mt-2">
                 <p class="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Sources:</p>
                 <span
-                    class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20">skroutz.gr</span>
+                    class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-agent-hermes/10 text-agent-hermes border border-agent-hermes/20">skroutz.gr</span>
             </div>
         </ls-agent-card>
 

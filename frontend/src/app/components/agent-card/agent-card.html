@@ -19,7 +19,7 @@
                         }
                     </svg>
                 </div>
-                <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-card shadow-sm"></span>
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-status-online border-2 border-card shadow-sm"></span>
             </div>
 
             <div class="flex-1 min-w-0">
@@ -62,7 +62,7 @@
         <!-- CTA Button -->
         <div class="mt-auto pt-2">
             <button (click)="onActivate()" [disabled]="state() === 'loading'"
-                class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-white font-semibold text-sm shadow-sm active:scale-95 transition-all duration-150 disabled:opacity-60 disabled:pointer-events-none cursor-pointer select-none"
+                class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-primary-foreground font-semibold text-sm shadow-sm active:scale-95 transition-all duration-150 disabled:opacity-60 disabled:pointer-events-none cursor-pointer select-none"
                 [ngClass]="config().theme.button">
 
                 @if (state() === 'loading') {
