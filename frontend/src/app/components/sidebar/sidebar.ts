@@ -11,5 +11,17 @@ import { HlmButton } from "@spartan-ng/helm/button";
 })
 export class Sidebar {
 
+  closeMobileSidebar() {
+    if (window.innerWidth < 768) {
+      //Simulates a click to close the sidebar when in mobile screen
+      const trigger = document.querySelector('[hlmSidebarTrigger]') as HTMLElement;
+      
+      if(trigger){
+        trigger.click();
+      }
+    
+    }
+  }
+
 }
 

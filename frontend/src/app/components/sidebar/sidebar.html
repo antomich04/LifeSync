@@ -1,10 +1,9 @@
-<hlm-sidebar collapsible="none"
+<hlm-sidebar
     class="border-sidebar-border bg-gradient-to-b from-sidebar to-primary/75 text-sidebar-foreground flex flex-col">
 
-    <!-- Logo -->
     <div hlmSidebarHeader class="cursor-pointer">
-        <hlm-card size="sm"
-            class="ring-0 shadow-none bg-sidebar-accent/60 border-transparent hover:bg-sidebar-accent/45 transition-colors"
+        <hlm-card size="sm" (click)="closeMobileSidebar()"
+            class="ring-0 shadow-none bg-sidebar-accent/80 border-transparent hover:bg-sidebar-accent/60 transition-colors"
             routerLink="/">
             <div hlmCardContent class="flex items-center justify-center p-4">
                 <img src="logo.png" alt="LifeSync Logo" class="w-40 select-none drop-shadow-md">
@@ -12,12 +11,10 @@
         </hlm-card>
     </div>
 
-    <!-- Nav -->
     <div hlmSidebarContent class="flex-1 px-3 pt-6">
         <div hlmSidebarGroup class="flex flex-col gap-1.5">
 
-            <!-- Dashboard -->
-            <button hlmBtn variant="ghost"
+            <button hlmBtn variant="ghost" (click)="closeMobileSidebar()"
                 class="flex items-center gap-3 w-full justify-start p-2.5 rounded-md cursor-pointer transition-all duration-300 border border-sidebar-foreground/10 bg-sidebar-foreground/5 text-sidebar-foreground/85 shadow-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-primary/50 hover:shadow-md"
                 routerLink="/dashboard"
                 routerLinkActive="!bg-sidebar-accent !text-sidebar-accent-foreground !border-sidebar-primary/50 font-medium !shadow-[inset_4px_0_0_0_var(--sidebar-primary)]"
@@ -25,23 +22,22 @@
                 <div class="flex-shrink-0 w-9 h-9 rounded-md flex items-center justify-center transition-colors"
                     [class.bg-sidebar-primary/20]="rlaDashboard.isActive">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="w-5 h-5"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"
                         [class.text-sidebar-primary]="rlaDashboard.isActive">
-                        <rect width="7" height="9" x="3" y="3" rx="1"/>
-                        <rect width="7" height="5" x="14" y="3" rx="1"/>
-                        <rect width="7" height="9" x="14" y="12" rx="1"/>
-                        <rect width="7" height="5" x="3" y="16" rx="1"/>
+                        <rect width="7" height="9" x="3" y="3" rx="1" />
+                        <rect width="7" height="5" x="14" y="3" rx="1" />
+                        <rect width="7" height="9" x="14" y="12" rx="1" />
+                        <rect width="7" height="5" x="3" y="16" rx="1" />
                     </svg>
                 </div>
-                <div class="flex flex-col items-start leading-tight">
-                    <span class="text-sm">Dashboard</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal">Live air quality</span>
+                <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
+                    <span class="text-sm truncate w-full text-left">Dashboard</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">Live air
+                        quality</span>
                 </div>
             </button>
 
-            <!-- Forecast -->
-            <button hlmBtn variant="ghost"
+            <button hlmBtn variant="ghost" (click)="closeMobileSidebar()"
                 class="flex items-center gap-3 w-full justify-start p-2.5 rounded-md cursor-pointer transition-all duration-300 border border-sidebar-foreground/10 bg-sidebar-foreground/5 text-sidebar-foreground/85 shadow-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-primary/50 hover:shadow-md"
                 routerLink="/forecast"
                 routerLinkActive="!bg-sidebar-accent !text-sidebar-accent-foreground !border-sidebar-primary/50 font-medium !shadow-[inset_4px_0_0_0_var(--sidebar-primary)]"
@@ -49,25 +45,24 @@
                 <div class="flex-shrink-0 w-9 h-9 rounded-md flex items-center justify-center transition-colors"
                     [class.bg-sidebar-primary/20]="rlaForecast.isActive">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="w-5 h-5"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"
                         [class.text-sidebar-primary]="rlaForecast.isActive">
-                        <path d="M12 16v5"/>
-                        <path d="M16 14v7"/>
-                        <path d="M20 10v11"/>
-                        <path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15"/>
-                        <path d="M4 18v3"/>
-                        <path d="M8 14v7"/>
+                        <path d="M12 16v5" />
+                        <path d="M16 14v7" />
+                        <path d="M20 10v11" />
+                        <path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15" />
+                        <path d="M4 18v3" />
+                        <path d="M8 14v7" />
                     </svg>
                 </div>
-                <div class="flex flex-col items-start leading-tight">
-                    <span class="text-sm">Forecast</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal">7-day ML predictions</span>
+                <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
+                    <span class="text-sm truncate w-full text-left">Forecast</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">7-day ML
+                        predictions</span>
                 </div>
             </button>
 
-            <!-- Advisors -->
-            <button hlmBtn variant="ghost"
+            <button hlmBtn variant="ghost" (click)="closeMobileSidebar()"
                 class="flex items-center gap-3 w-full justify-start p-2.5 rounded-md cursor-pointer transition-all duration-300 border border-sidebar-foreground/10 bg-sidebar-foreground/5 text-sidebar-foreground/85 shadow-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-primary/50 hover:shadow-md"
                 routerLink="/advisors"
                 routerLinkActive="!bg-sidebar-accent !text-sidebar-accent-foreground !border-sidebar-primary/50 font-medium !shadow-[inset_4px_0_0_0_var(--sidebar-primary)]"
@@ -75,25 +70,24 @@
                 <div class="flex-shrink-0 w-9 h-9 rounded-md flex items-center justify-center transition-colors"
                     [class.bg-sidebar-primary/20]="rlaAdvisors.isActive">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="w-5 h-5"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"
                         [class.text-sidebar-primary]="rlaAdvisors.isActive">
-                        <path d="M12 8V4H8"/>
-                        <rect width="16" height="12" x="4" y="8" rx="2"/>
-                        <path d="M2 14h2"/>
-                        <path d="M20 14h2"/>
-                        <path d="M15 13v2"/>
-                        <path d="M9 13v2"/>
+                        <path d="M12 8V4H8" />
+                        <rect width="16" height="12" x="4" y="8" rx="2" />
+                        <path d="M2 14h2" />
+                        <path d="M20 14h2" />
+                        <path d="M15 13v2" />
+                        <path d="M9 13v2" />
                     </svg>
                 </div>
-                <div class="flex flex-col items-start leading-tight">
-                    <span class="text-sm">Advisors</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal">Iris & Hermes agents</span>
+                <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
+                    <span class="text-sm truncate w-full text-left">Advisors</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">Iris & Hermes
+                        agents</span>
                 </div>
             </button>
 
-            <!-- Support -->
-            <button hlmBtn variant="ghost"
+            <button hlmBtn variant="ghost" (click)="closeMobileSidebar()"
                 class="flex items-center gap-3 w-full justify-start p-2.5 rounded-md cursor-pointer transition-all duration-300 border border-sidebar-foreground/10 bg-sidebar-foreground/5 text-sidebar-foreground/85 shadow-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-primary/50 hover:shadow-md"
                 routerLink="/support"
                 routerLinkActive="!bg-sidebar-accent !text-sidebar-accent-foreground !border-sidebar-primary/50 font-medium !shadow-[inset_4px_0_0_0_var(--sidebar-primary)]"
@@ -101,32 +95,34 @@
                 <div class="flex-shrink-0 w-9 h-9 rounded-md flex items-center justify-center transition-colors"
                     [class.bg-sidebar-primary/20]="rlaSupport.isActive">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="w-5 h-5"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"
                         [class.text-sidebar-primary]="rlaSupport.isActive">
-                        <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/>
-                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                        <line x1="12" x2="12.01" y1="17" y2="17"/>
+                        <path
+                            d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                        <line x1="12" x2="12.01" y1="17" y2="17" />
                     </svg>
                 </div>
-                <div class="flex flex-col items-start leading-tight">
-                    <span class="text-sm">Support</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal">Lucy & FAQ</span>
+                <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
+                    <span class="text-sm truncate w-full text-left">Support</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">Lucy &
+                        FAQ</span>
                 </div>
             </button>
 
         </div>
     </div>
 
-    <!-- Footer -->
     <div hlmSidebarHeader class="mt-auto px-3 pb-4 pt-3 border-t border-sidebar-foreground/10">
         <div class="flex items-center justify-between px-1">
-            <div class="flex flex-col gap-0.5">
-                <span class="text-xs font-semibold text-sidebar-foreground/80 uppercase tracking-wider">LifeSync</span>
-                <span class="text-xs text-sidebar-foreground/60">v1.0.0 · Thessaloniki</span>
+            <div class="flex flex-col gap-0.5 min-w-0">
+                <span
+                    class="text-xs font-semibold text-sidebar-foreground/80 uppercase tracking-wider truncate">LifeSync</span>
+                <span class="text-xs text-sidebar-foreground/60 truncate">v1.0.0 · Thessaloniki</span>
             </div>
-            <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-sidebar-foreground/5 border border-sidebar-foreground/10">
-                <span class="w-2 h-2 rounded-full bg-status-online animate-pulse"></span>
+            <div
+                class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-sidebar-foreground/5 border border-sidebar-foreground/10 flex-shrink-0">
+                <span class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_6px_#4ade80] animate-pulse"></span>
                 <span class="text-xs text-sidebar-foreground/80 font-medium">Live</span>
             </div>
         </div>

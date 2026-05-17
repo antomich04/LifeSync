@@ -10,16 +10,13 @@
         </div>
 
         <!-- Tab switcher with colored dots -->
-        <div class="flex bg-muted p-1 rounded-lg self-start md:self-auto overflow-x-auto w-full md:w-auto gap-0.5">
+        <div class="flex flex-wrap bg-muted p-1 rounded-lg self-start md:self-auto w-full md:w-auto gap-1">
             @for (tab of tabs; track tab.id) {
-            <button (click)="selectTab(tab)"
-                [class.bg-background]="selectedTab().id === tab.id"
-                [class.shadow-sm]="selectedTab().id === tab.id"
-                [class.text-foreground]="selectedTab().id === tab.id"
+            <button (click)="selectTab(tab)" [class.bg-background]="selectedTab().id === tab.id"
+                [class.shadow-sm]="selectedTab().id === tab.id" [class.text-foreground]="selectedTab().id === tab.id"
                 [class.text-muted-foreground]="selectedTab().id !== tab.id"
-                class="flex items-center gap-1.5 flex-1 md:flex-none px-3 py-1.5 text-xs font-semibold rounded-md transition-all whitespace-nowrap">
-                <span class="w-2 h-2 rounded-full flex-shrink-0 transition-opacity"
-                    [style.background]="tab.color"
+                class="flex items-center justify-center gap-1 sm:gap-1.5 flex-1 md:flex-none px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-semibold rounded-md transition-all whitespace-nowrap">
+                <span class="w-2 h-2 rounded-full flex-shrink-0 transition-opacity" [style.background]="tab.color"
                     [class.opacity-40]="selectedTab().id !== tab.id">
                 </span>
                 {{ tab.label }}
@@ -31,7 +28,8 @@
     <!-- Chart area -->
     <div class="h-[350px] w-full flex items-center justify-center">
         @if (errorMessage()) {
-        <div class="flex flex-col items-center gap-2 text-muted-foreground bg-muted/30 p-6 rounded-lg border border-border border-dashed">
+        <div
+            class="flex flex-col items-center gap-2 text-muted-foreground bg-muted/30 p-6 rounded-lg border border-border border-dashed">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="w-8 h-8 opacity-80">
@@ -48,12 +46,11 @@
 
     <!-- Year pagination -->
     <nav class="w-full flex justify-center mt-2 border-t border-border pt-4">
-        <ul class="flex flex-row items-center gap-1">
+        <ul class="flex flex-row flex-wrap justify-center items-center gap-1 md:gap-2">
 
             <li>
-                <button (click)="prevYear()"
-                    [disabled]="selectedYear() === availableYears()[0]"
-                    class="inline-flex items-center select-none justify-center cursor-pointer rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 gap-1 disabled:opacity-50 disabled:pointer-events-none">
+                <button (click)="prevYear()" [disabled]="selectedYear() === availableYears()[0]"
+                    class="inline-flex items-center select-none justify-center cursor-pointer rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 px-3 sm:px-4 py-2 gap-1 disabled:opacity-50 disabled:pointer-events-none">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="w-4 h-4">
@@ -64,9 +61,9 @@
             </li>
 
             @for (year of availableYears(); track year) {
-            <li class="hidden sm:block">
+            <li>
                 <button (click)="selectYear(year)"
-                    class="inline-flex items-center select-none justify-center cursor-pointer rounded-md text-sm font-medium transition-colors h-9 w-9"
+                    class="inline-flex items-center select-none justify-center cursor-pointer rounded-md text-xs sm:text-sm font-medium transition-colors h-8 w-8 sm:h-9 sm:w-9"
                     [class.bg-primary]="year === selectedYear()"
                     [class.text-primary-foreground]="year === selectedYear()"
                     [class.hover:bg-accent]="year !== selectedYear()"
@@ -79,7 +76,7 @@
             <li>
                 <button (click)="nextYear()"
                     [disabled]="selectedYear() === availableYears()[availableYears().length - 1]"
-                    class="inline-flex items-center select-none justify-center cursor-pointer rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 gap-1 disabled:opacity-50 disabled:pointer-events-none">
+                    class="inline-flex items-center select-none justify-center cursor-pointer rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 px-3 sm:px-4 py-2 gap-1 disabled:opacity-50 disabled:pointer-events-none">
                     <span class="hidden sm:block">Next</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
