@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { IrisPayload as HermesPayload } from './irisService'; //Same payload structure
 import { AgentConfig } from '../shared/types';
 
@@ -51,7 +51,7 @@ export class HermesService {
       {
         label: 'Context-aware search',
         description:
-          'Queries Skroutz and BestPrice with product terms matched to the pollutants exceeding safe levels.',
+          'Queries Skroutz with product terms matched to the pollutants exceeding safe levels.',
         icon: 'M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z M21 21l-4.35-4.35'
       },
       {
