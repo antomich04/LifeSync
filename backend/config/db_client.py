@@ -13,6 +13,9 @@ def get_db_client() -> AsyncEngine:
         if not db_url:
             raise RuntimeError("DB_URL is not configured.")
 
-        _db_client = create_async_engine(db_url)
+        _db_client = create_async_engine(
+            db_url,
+            connect_args={"statement_cache_size": 0}
+        )
 
     return _db_client
