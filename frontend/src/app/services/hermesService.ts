@@ -44,7 +44,7 @@ export class HermesService {
       iconText: 'text-agent-hermes',
       badgeBg: 'bg-agent-hermes/10 border-agent-hermes/20',
       badgeText: 'text-agent-hermes',
-      button: 'bg-agent-hermes hover:bg-agent-hermes/90',
+      button: 'bg-agent-button hover:bg-agent-button/90',
     },
     capabilitiesTitle: 'How Hermes helps you',
     capabilities: [

@@ -2,6 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AppSessionService } from './appSessionService';
+import { getApiErrorMessage } from '../shared/api-error';
 
 export interface ChatMessage {
   role: 'user' | 'lucy';
@@ -82,9 +83,11 @@ export class ChatbotService {
       },
       error: (err) => {
         console.error('Lucy API error', err);
+        const message = getApiErrorMessage(err, 'Oops! I am having trouble connecting to the server right now. Please try again later.');
+
         this.messages.update(msgs => [
           ...msgs,
-          { role: 'lucy', content: 'Oops! I am having trouble connecting to the server right now. Please try again later.', timestamp: new Date() }
+          { role: 'lucy', content: message, timestamp: new Date() }
         ]);
         this.isLoading.set(false);
       }

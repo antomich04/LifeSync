@@ -5,10 +5,10 @@ import re
 ddg_search = DuckDuckGoSearchResults(num_results=10, output_format="list")
 
 POLLUTANT_QUERIES = {
-    "NO2": ["καθαριστής αέρα ενεργός άνθρακας site:skroutz.gr", "air purifier carbon filter site:skroutz.gr"],
-    "SO2": ["καθαριστής αέρα ενεργός άνθρακας site:skroutz.gr", "φίλτρο άνθρακα καθαριστής site:skroutz.gr"],
-    "O3":  ["καθαριστής αέρα site:skroutz.gr", "air purifier O3 site:skroutz.gr"],
-    "CO":  ["ανιχνευτής μονοξειδίου του άνθρακα site:skroutz.gr", "CO detector site:skroutz.gr"],
+    "NO2": ["καθαριστής αέρα φίλτρο ενεργού άνθρακα site:skroutz.gr", "air purifier carbon filter site:skroutz.gr"],
+    "SO2": ["καθαριστής αέρα ιονιστής άνθρακας site:skroutz.gr", "ιονιστής αέρα hepa site:skroutz.gr"],
+    "O3":  ["καθαριστής αέρα smart hepa site:skroutz.gr", "air purifier smart wifi site:skroutz.gr"],
+    "CO":  ["ανιχνευτής μονοξειδίου του άνθρακα site:skroutz.gr","CO detector site:skroutz.gr"]
 }
 
 ALLOWED_DOMAIN = {"skroutz.gr"}

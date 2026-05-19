@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AgentState, Pollutant, Step } from '../../shared/types';
 import { AgentCardComponent } from '../../components/agent-card/agent-card';
-import { ToastComponent } from '../../components/toast/toast';
 import { ReportSheetComponent } from '../../components/report-sheet/report-sheet';
 import { toast } from '@spartan-ng/brain/sonner';
 import { AppSessionService } from '../../services/appSessionService';
 import { IrisService } from '../../services/irisService';
 import { HermesService } from '../../services/hermesService';
+import { getApiErrorMessage, getApiErrorTitle } from '../../shared/api-error';
 
 @Component({
   selector: 'ls-advisors',
   standalone: true,
-  imports: [CommonModule, AgentCardComponent, ToastComponent, ReportSheetComponent],
+  imports: [CommonModule, AgentCardComponent, ReportSheetComponent],
   templateUrl: './advisors-page.html',
 })
 export class AdvisorsPage {
@@ -154,7 +154,12 @@ export class AdvisorsPage {
           
           this.activeSheetState.set('open');
         },
-        error: () => this.irisState.set('idle'),
+        error: (err) => {
+          this.irisState.set('idle');
+          toast(getApiErrorTitle(err, 'Iris Request Failed'), {
+            description: getApiErrorMessage(err, 'Iris could not generate a report right now. Please try again.'),
+          });
+        },
       });
     } else {
       this.hermesState.set('loading');
@@ -170,7 +175,12 @@ export class AdvisorsPage {
             description: `Found ${products.length} product recommendations for your area.` 
           });
         },
-        error: () => this.hermesState.set('idle'),
+        error: (err) => {
+          this.hermesState.set('idle');
+          toast(getApiErrorTitle(err, 'Hermes Request Failed'), {
+            description: getApiErrorMessage(err, 'Hermes could not fetch recommendations right now. Please try again.'),
+          });
+        },
       });
     }
   }

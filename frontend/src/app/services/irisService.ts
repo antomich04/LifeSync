@@ -43,7 +43,7 @@ export class IrisService {
         iconText: 'text-agent-iris',
         badgeBg: 'bg-agent-iris/10 border-agent-iris/20',
         badgeText: 'text-agent-iris',
-        button: 'bg-agent-iris hover:bg-agent-iris/90',
+        button: 'bg-agent-button hover:bg-agent-button/90',
       },
       capabilitiesTitle: 'How Iris helps you',
       capabilities: [
