@@ -19,11 +19,18 @@ export class ChatbotComponent {
   @ViewChild('chatInput') chatInput!: ElementRef<HTMLTextAreaElement>; //Reference for resetting height
 
   constructor() {
-    //Automatically scrolls to bottom whenever messages or loading state change
+    //Automatically scrolls to bottom whenever messages, loading state, or open state changes
     effect(() => {
       this.chatbotService.messages();
       this.chatbotService.isLoading();
-      this.scrollToBottom();
+      
+      //Tracks the open state so it triggers when the chat is re-opened
+      const isOpen = this.chatbotService.isOpen(); 
+
+      if(isOpen){
+        this.scrollToBottom();
+      }
+
     });
   }
 
