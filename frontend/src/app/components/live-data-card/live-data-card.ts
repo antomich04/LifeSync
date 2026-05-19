@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { THESSALONIKI_REGIONS } from '../../shared/region_coordinates';
 import { AqiService, LiveAirQualityData } from '../../services/aqiService';
+import { getApiErrorMessage } from '../../shared/api-error';
 
 export interface PollutantDisplay {
   key: string;
@@ -50,8 +51,10 @@ export class LiveDataCardComponent {
           this.liveMetrics.set(data);
           this.isLoading.set(false);
         },
-        error: () => {
-          this.errorMessage.set('Failed to fetch data. Please try again later.');
+        error: (err) => {
+          const message = getApiErrorMessage(err, 'Failed to fetch data. Please try again later.');
+
+          this.errorMessage.set(message);
           this.isLoading.set(false);
         },
       });

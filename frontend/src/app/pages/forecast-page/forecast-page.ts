@@ -7,6 +7,7 @@ import { PredictiveChartComponent } from '../../components/predictive-chart/pred
 import { ForecastService, RegionForecast, PollutantForecast } from '../../services/forecastService';
 import { AppSessionService, PollutantRiskSummary } from '../../services/appSessionService';
 import { SAFE_LIMITS, getPeakStatus } from '../../shared/pollutant_limits';
+import { getApiErrorMessage } from '../../shared/api-error';
 
 export interface TabOption {
   id: 'no2' | 'o3' | 'co' | 'so2';
@@ -84,6 +85,13 @@ export class ForecastPage {
           };
 
           this.sessionService.setContext(region, data, riskSummary);
+        },
+        error: (err) => {
+          const message = getApiErrorMessage(err, 'Could not load the forecast for this municipality. Please try again.');
+
+          this.errorMessage.set(message);
+          this.forecastData.set(null);
+          this.isLoading.set(false);
         },
       });
   }

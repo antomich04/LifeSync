@@ -5,6 +5,7 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { forkJoin } from 'rxjs';
 import { AqiService } from '../../services/aqiService';
 import { ParticlesService, HistoricalParticleResponse } from '../../services/particlesService';
+import { getApiErrorMessage } from '../../shared/api-error';
 
 export interface TabOption {
   id: string;
@@ -189,7 +190,9 @@ export class HistoricalChartComponent {
         },
         error: (err) => {
           console.error('Failed to fetch available years', err);
-          this.errorMessage.set('Failed to load historical data timeframe.');
+          const message = getApiErrorMessage(err, 'Failed to load historical data timeframe.');
+
+          this.errorMessage.set(message);
         }
       });
   }
@@ -240,7 +243,9 @@ export class HistoricalChartComponent {
       },
       error: (err) => {
         console.error('Failed to fetch historical data', err);
-        this.errorMessage.set('Could not load historical data for this year.');
+        const message = getApiErrorMessage(err, 'Could not load historical data for this year.');
+
+        this.errorMessage.set(message);
       }
     });
   }
