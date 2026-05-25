@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Query, Request
 from services.aqi_service import fetch_live_data, fetch_historical_aqi, fetch_available_years
 from services.particle_service import fetch_historical_particles
+from services.water_service import fetch_historical_wqi
 from config.rate_limiter import limiter
 
 router = APIRouter(prefix="/api")
@@ -39,3 +40,14 @@ async def fetch_historical_particles_endpoint(
     year: int = Query(..., description="Year for which to fetch historical particle data")
 ):
     return await fetch_historical_particles(municipality, year)
+
+
+@router.get("/historical-wqi")
+@limiter.limit("30/minute")
+async def fetch_historical_wqi_endpoint(
+    request: Request,
+    municipality: str = Query(..., description="Name of the municipality"),
+    year: int = Query(..., description="Year for which to fetch historical WQI data")
+):
+    #Fetches the monthly WQI score and individual physicochemical parameters for a specific municipality and year.
+    return await fetch_historical_wqi(municipality, year)
