@@ -19,14 +19,17 @@ export class Sidebar {
     this.languageService.setLanguage(language);
   }
 
-  closeMobileSidebar() {
-    if (window.innerWidth < 768) {
-      //Simulates a click to close the sidebar when in mobile screen
-      const trigger = document.querySelector('[hlmSidebarTrigger]') as HTMLElement;
+  closeMobileSidebar(): void {
 
-      if (trigger) {
-        trigger.click();
-      }
-    }
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    
+    if (!isMobile) return;
+
+    const trigger = document.querySelector<HTMLElement>('[hlmSidebarTrigger]');
+    
+    if (!trigger) return;
+
+    //Runs the toggle after the current click/navigation cycle to avoid timing issues.
+    requestAnimationFrame(() => trigger.click());
   }
 }
