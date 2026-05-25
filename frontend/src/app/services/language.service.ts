@@ -231,7 +231,7 @@ const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
     'support.lucyDescription':
       'Lucy knows everything about LifeSync - air quality data, pollutant levels, health recommendations, and more. Ask her anything and get an instant, accurate answer, 24/7.',
     'support.promptAqi': 'What do the AQI levels mean?',
-    'support.promptPollutants': 'Which pollutants are most harmful?',
+    'support.promptPollutants': 'Which air pollutants are most harmful?',
     'support.promptUpdates': 'How does the data get updated?',
     'support.chatWithLucy': 'Chat with Lucy',
     'support.stillNeedHelp': 'Still need help?',
@@ -249,6 +249,9 @@ const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
     'faq.aqi.question': 'What do the AQI levels mean?',
     'faq.aqi.answer':
       'The Air Quality Index (AQI) is a standardised scale from 0 to 500. Values up to 50 indicate Good air quality with little to no risk. 51-100 is Moderate. 101-150 is Unhealthy for Sensitive Groups. Above 150 is considered Unhealthy or worse, and outdoor activity should be limited.',
+    'faq.wqi.question': 'What do the WQI levels mean?',
+    'faq.wqi.answer':
+      'The Water Quality Index (WQI) summarises water quality using key parameters like pH, dissolved oxygen, turbidity, and conductivity. Higher WQI values mean better water quality, while lower values signal more pollution or environmental stress.',
     'faq.updated.question': 'How often is the live data updated?',
     'faq.updated.answer':
       'Live pollutant readings are fetched from the OpenWeather Air Pollution API and refreshed every time you load or navigate to the Dashboard. Historical data reflects official municipal measurements aggregated on a daily or monthly basis.',
@@ -479,7 +482,7 @@ const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
     'support.lucyDescription':
       'Η Lucy γνωρίζει τα πάντα για το LifeSync: δεδομένα ποιότητας αέρα, επίπεδα ρύπων, συστάσεις υγείας και άλλα. Ρώτησέ την οτιδήποτε και πάρε άμεση, ακριβή απάντηση 24/7.',
     'support.promptAqi': 'Τι σημαίνουν τα επίπεδα AQI;',
-    'support.promptPollutants': 'Ποιοι ρύποι είναι πιο επιβλαβείς;',
+    'support.promptPollutants': 'Ποιοι αέρινοι ρύποι είναι πιο επιβλαβείς;',
     'support.promptUpdates': 'Πώς ενημερώνονται τα δεδομένα;',
     'support.chatWithLucy': 'Συνομιλία με τη Lucy',
     'support.stillNeedHelp': 'Χρειάζεσαι ακόμα βοήθεια;',
@@ -497,6 +500,9 @@ const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
     'faq.aqi.question': 'Τι σημαίνουν τα επίπεδα AQI;',
     'faq.aqi.answer':
       'Ο Δείκτης Ποιότητας Αέρα (AQI) είναι τυποποιημένη κλίμακα από 0 έως 500. Τιμές έως 50 δείχνουν καλή ποιότητα αέρα με μικρό ή καθόλου κίνδυνο. 51-100 είναι μέτρια. 101-150 είναι ανθυγιεινή για ευαίσθητες ομάδες. Πάνω από 150 θεωρείται ανθυγιεινή ή χειρότερη και η εξωτερική δραστηριότητα πρέπει να περιορίζεται.',
+    'faq.wqi.question': 'Τι σημαίνουν τα επίπεδα WQI;',
+    'faq.wqi.answer':
+      'Ο Δείκτης Ποιότητας Νερού (WQI) συνοψίζει την ποιότητα του νερού με βασικές παραμέτρους όπως pH, διαλυμένο οξυγόνο, θολότητα και αγωγιμότητα. Υψηλότερες τιμές WQI σημαίνουν καλύτερη ποιότητα νερού, ενώ χαμηλότερες τιμές δείχνουν μεγαλύτερη ρύπανση ή περιβαλλοντική πίεση.',
     'faq.updated.question': 'Πόσο συχνά ενημερώνονται τα ζωντανά δεδομένα;',
     'faq.updated.answer':
       'Οι ζωντανές μετρήσεις ρύπων αντλούνται από το OpenWeather Air Pollution API και ανανεώνονται κάθε φορά που φορτώνεις ή πλοηγείσαι στο Dashboard. Τα ιστορικά δεδομένα αντικατοπτρίζουν επίσημες δημοτικές μετρήσεις συγκεντρωμένες ημερήσια ή μηνιαία.',

@@ -30,16 +30,21 @@ export class FaqSectionComponent {
     },
     {
       id: 2,
+      question: this.languageService.translate('faq.wqi.question'),
+      answer: this.languageService.translate('faq.wqi.answer'),
+    },
+    {
+      id: 3,
       question: this.languageService.translate('faq.updated.question'),
       answer: this.languageService.translate('faq.updated.answer'),
     },
     {
-      id: 3,
+      id: 4,
       question: this.languageService.translate('faq.municipalities.question'),
       answer: this.languageService.translate('faq.municipalities.answer'),
     },
     {
-      id: 4,
+      id: 5,
       question: this.languageService.translate('faq.historical.question'),
       answer: this.languageService.translate('faq.historical.answer'),
     },
