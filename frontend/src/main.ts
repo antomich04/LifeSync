@@ -1,6 +1,10 @@
 import { bootstrapApplication } from '@angular/platform-browser';
+import { registerLocaleData } from '@angular/common';
+import localeEl from '@angular/common/locales/el';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
+
+registerLocaleData(localeEl);
 
 bootstrapApplication(App, appConfig)
   .catch((err) => console.error(err));

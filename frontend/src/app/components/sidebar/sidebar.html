@@ -31,9 +31,8 @@
                     </svg>
                 </div>
                 <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
-                    <span class="text-sm truncate w-full text-left">Dashboard</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">Live air
-                        quality</span>
+                    <span class="text-sm truncate w-full text-left">{{ 'sidebar.dashboard.title' | translate }}</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">{{ 'sidebar.dashboard.subtitle' | translate }}</span>
                 </div>
             </button>
 
@@ -56,9 +55,8 @@
                     </svg>
                 </div>
                 <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
-                    <span class="text-sm truncate w-full text-left">Forecast</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">7-day ML
-                        predictions</span>
+                    <span class="text-sm truncate w-full text-left">{{ 'sidebar.forecast.title' | translate }}</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">{{ 'sidebar.forecast.subtitle' | translate }}</span>
                 </div>
             </button>
 
@@ -81,9 +79,8 @@
                     </svg>
                 </div>
                 <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
-                    <span class="text-sm truncate w-full text-left">Advisors</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">Iris & Hermes
-                        agents</span>
+                    <span class="text-sm truncate w-full text-left">{{ 'sidebar.advisors.title' | translate }}</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">{{ 'sidebar.advisors.subtitle' | translate }}</span>
                 </div>
             </button>
 
@@ -104,9 +101,8 @@
                     </svg>
                 </div>
                 <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
-                    <span class="text-sm truncate w-full text-left">Support</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">Lucy &
-                        FAQ</span>
+                    <span class="text-sm truncate w-full text-left">{{ 'sidebar.support.title' | translate }}</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">{{ 'sidebar.support.subtitle' | translate }}</span>
                 </div>
             </button>
 
@@ -114,11 +110,29 @@
     </div>
 
     <div hlmSidebarHeader class="mt-auto px-3 pb-4 pt-3 border-t border-sidebar-foreground/10">
-        <div class="flex items-center justify-between px-1">
-            <div class="flex flex-col gap-0.5 min-w-0">
-                <span
-                    class="text-xs font-semibold text-sidebar-foreground/80 uppercase tracking-wider truncate">LifeSync</span>
-                <span class="text-xs text-sidebar-foreground/60 truncate">Thessaloniki</span>
+        <div class="flex flex-col gap-3 px-1">
+            <label class="flex flex-col gap-1.5">
+                <span class="text-[10px] font-semibold text-sidebar-foreground/60 uppercase tracking-wider">
+                    {{ 'language.label' | translate }}
+                </span>
+                <select
+                    [value]="languageService.currentLanguage()"
+                    (change)="changeLanguage($event)"
+                    class="w-full rounded-md border border-sidebar-foreground/15 bg-sidebar-foreground/10 px-3 py-2 text-xs font-medium text-sidebar-foreground outline-none transition-colors hover:bg-sidebar-foreground/15 focus:ring-2 focus:ring-sidebar-primary/40">
+                    @for (option of languageOptions; track option.code) {
+                    <option [value]="option.code" [selected]="option.code === languageService.currentLanguage()" class="text-foreground bg-background">
+                        {{ option.nativeLabel }}
+                    </option>
+                    }
+                </select>
+            </label>
+
+            <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-0.5 min-w-0">
+                    <span
+                        class="text-xs font-semibold text-sidebar-foreground/80 uppercase tracking-wider truncate">LifeSync</span>
+                    <span class="text-xs text-sidebar-foreground/60 truncate">{{ 'sidebar.location' | translate }}</span>
+                </div>
             </div>
         </div>
     </div>

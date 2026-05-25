@@ -2,8 +2,11 @@ import { Component, signal, inject, Input, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { THESSALONIKI_REGIONS } from '../../shared/region_coordinates';
-import { AqiService, LiveAirQualityData } from '../../services/aqiService';
-import { getApiErrorMessage } from '../../shared/api-error';
+import { AqiService, LiveAirQualityData } from '../../services/aqi.service';
+import { getApiErrorMessage } from '../../shared/api_error';
+import { TranslatePipe } from '../../shared/translate.pipe';
+import { RegionNamePipe } from '../../shared/region_name.pipe';
+import { LanguageService } from '../../services/language.service';
 
 export interface PollutantDisplay {
   key: string;
@@ -17,11 +20,12 @@ export interface PollutantDisplay {
 @Component({
   selector: 'ls-live-data-card',
   standalone: true,
-  imports: [HlmCardImports],
+  imports: [HlmCardImports, TranslatePipe, RegionNamePipe],
   templateUrl: './live-data-card.html',
 })
 export class LiveDataCardComponent {
   private aqiService = inject(AqiService);
+  private languageService = inject(LanguageService);
   private destroyRef = inject(DestroyRef);
 
   public readonly isLoading = signal(false);
@@ -131,6 +135,13 @@ export class LiveDataCardComponent {
       default:
         return 'text-muted-foreground bg-muted';
     }
+  }
+
+  public getTranslatedStatus(status: string | undefined): string {
+    if (!status) return '';
+
+    const statusKey = status.replace(/\s+/g, '').replace(/^./, (char) => char.toLowerCase());
+    return this.languageService.translate(`live.status.${statusKey}`);
   }
 
   //Radial arc helpers methods

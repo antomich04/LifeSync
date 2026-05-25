@@ -1,4 +1,6 @@
-import { Component, signal, output } from '@angular/core';
+import { Component, computed, inject, output, signal } from '@angular/core';
+import { LanguageService } from '../../services/language.service';
+import { TranslatePipe } from '../../shared/translate.pipe';
 
 export interface Faq {
   id: number;
@@ -9,41 +11,39 @@ export interface Faq {
 @Component({
   selector: 'ls-faq-section',
   standalone: true,
+  imports: [TranslatePipe],
   templateUrl: './faq-section.html',
 })
 export class FaqSectionComponent {
+  private readonly languageService = inject(LanguageService);
 
   //Emits the selected prompt upward so the parent can open chatbot
   prompt = output<string>();
 
   expandedFaq = signal<number | null>(null);
 
-  faqs: Faq[] = [
+  faqs = computed<Faq[]>(() => [
     {
       id: 1,
-      question: 'What do the AQI levels mean?',
-      answer:
-        'The Air Quality Index (AQI) is a standardised scale from 0 to 500. Values up to 50 indicate Good air quality with little to no risk. 51–100 is Moderate. 101–150 is Unhealthy for Sensitive Groups. Above 150 is considered Unhealthy or worse, and outdoor activity should be limited.',
+      question: this.languageService.translate('faq.aqi.question'),
+      answer: this.languageService.translate('faq.aqi.answer'),
     },
     {
       id: 2,
-      question: 'How often is the live data updated?',
-      answer:
-        'Live pollutant readings are fetched from the OpenWeather Air Pollution API and refreshed every time you load or navigate to the Dashboard. Historical data reflects official municipal measurements aggregated on a daily or monthly basis.',
+      question: this.languageService.translate('faq.updated.question'),
+      answer: this.languageService.translate('faq.updated.answer'),
     },
     {
       id: 3,
-      question: 'Which municipalities are supported?',
-      answer:
-        'LifeSync currently covers municipalities in the wider Thessaloniki region, including Ampelokipoi-Menemeni, Kalamaria, Pavlos Melas, and more. Coverage is continuously expanding as new Open Data sources become available.',
+      question: this.languageService.translate('faq.municipalities.question'),
+      answer: this.languageService.translate('faq.municipalities.answer'),
     },
     {
       id: 4,
-      question: 'Why does the historical AQI appear lower than expected?',
-      answer:
-        'The historical Mean AQI is calculated using gaseous pollutants (NO₂, O₃, CO, SO₂) only, as particulate matter (PM10, PM2.5) data was unavailable in the historical dataset. This may result in scores that are lower than the true overall air quality.',
+      question: this.languageService.translate('faq.historical.question'),
+      answer: this.languageService.translate('faq.historical.answer'),
     },
-  ];
+  ]);
 
   toggleFaq(id: number): void {
     this.expandedFaq.update(current => (current === id ? null : id));

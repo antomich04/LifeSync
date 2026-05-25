@@ -8,6 +8,7 @@ import { AgentConfig } from '../shared/types';
 export interface IrisPayload {
   region: string;
   forecast_data: any;
+  language: 'en' | 'el';
 }
 
 

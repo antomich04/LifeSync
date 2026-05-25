@@ -5,11 +5,12 @@ import { HistoricalChartComponent } from '../../components/historical-chart/hist
 import { WaterQualityChartComponent } from '../../components/water-quality-chart/water-quality-chart';
 import { TranslatePipe } from '../../shared/translate.pipe';
 import { REGION_CAPABILITIES } from '../../shared/region_capabilities';
+import { RegionNamePipe } from '../../shared/region_name.pipe';
 
 @Component({
   selector: 'ls-dashboard-page',
   standalone: true,
-  imports: [RegionSearchComponent, LiveDataCardComponent, HistoricalChartComponent, WaterQualityChartComponent, TranslatePipe],
+  imports: [RegionSearchComponent, LiveDataCardComponent, HistoricalChartComponent, WaterQualityChartComponent, TranslatePipe, RegionNamePipe],
   templateUrl: './dashboard-page.html'
 })
 export class DashboardPage {

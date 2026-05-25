@@ -1,15 +1,19 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PollutantForecast } from '../../services/forecastService';
+import { PollutantForecast } from '../../services/forecast.service';
 import { SAFE_LIMITS, getPeakStatus } from '../../shared/pollutant_limits';
+import { LanguageService } from '../../services/language.service';
+import { TranslatePipe } from '../../shared/translate.pipe';
 
 @Component({
   selector: 'ls-forecast-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './forecast-card.html',
 })
 export class ForecastCard {
+  private readonly languageService = inject(LanguageService);
+
   @Input({ required: true }) data!: PollutantForecast;
   @Input({ required: true }) pollutantName!: string;
   @Input({ required: true }) color!: string;
@@ -37,7 +41,19 @@ export class ForecastCard {
   }
 
   public getPeakRatioLabel(): string {
-    return getPeakStatus(this.data.predictedPeak, this.safeLimit);
+    const status = getPeakStatus(this.data.predictedPeak, this.safeLimit);
+    const statusKeys: Record<string, string> = {
+      'Well within limit': 'forecast.peakStatus.wellWithinLimit',
+      'Approaching limit': 'forecast.peakStatus.approachingLimit',
+      'Near limit': 'forecast.peakStatus.nearLimit',
+      'Exceeds limit': 'forecast.peakStatus.exceedsLimit',
+    };
+
+    return this.languageService.translate(statusKeys[status]);
+  }
+
+  public getTranslatedTrend(): string {
+    return this.languageService.translate(`trend.${this.data.trend.toLowerCase()}`);
   }
 
   public getPeakRatioClass(): string {

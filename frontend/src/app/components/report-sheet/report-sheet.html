@@ -5,10 +5,10 @@
         <hlm-sheet-header>
             <h3 hlmSheetTitle class="flex items-center gap-2 text-xl font-bold">
                 <span class="w-2.5 h-2.5 rounded-full bg-agent-iris animate-pulse"></span>
-                Report from {{ agentName() }}
+                {{ 'report.title' | translate }} {{ agentName() }}
             </h3>
             <p hlmSheetDescription>
-                Live analysis generated specifically for your area.
+                {{ 'report.description' | translate }}
             </p>
         </hlm-sheet-header>
 
@@ -25,7 +25,7 @@
         <hlm-sheet-footer>
             <button hlmSheetClose
                 class="w-full select-none cursor-pointer px-4 py-2.5 mt-4 text-sm font-semibold transition-colors rounded-xl bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                Close Report
+                {{ 'report.close' | translate }}
             </button>
         </hlm-sheet-footer>
 

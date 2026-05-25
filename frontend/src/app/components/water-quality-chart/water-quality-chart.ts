@@ -5,6 +5,7 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { TranslatePipe } from '../../shared/translate.pipe';
 import { WaterQualityService, WaterMonthlyData } from '../../services/waterQuality.service';
 import { getApiErrorMessage } from '../../shared/api_error';
+import { LanguageService } from '../../services/language.service';
 
 export interface WaterTabOption {
   id: keyof Omit<WaterMonthlyData, 'month'>;
@@ -23,6 +24,7 @@ export interface WaterTabOption {
 })
 export class WaterQualityChartComponent {
   private waterService = inject(WaterQualityService);
+  private languageService = inject(LanguageService);
   private destroyRef = inject(DestroyRef);
 
   private _region!: string;
@@ -85,29 +87,14 @@ export class WaterQualityChartComponent {
     const activeTab = this.selectedTab();
     const data = this.waterData();
 
-    const monthNames = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-
     //Filters data to only show months that actually exist in the API response
     const sortedData = [...data].sort((a, b) => a.month - b.month);
 
     return {
-      labels: sortedData.map((d) => monthNames[d.month - 1]),
+      labels: sortedData.map((d) => this.getMonthName(d.month)),
       datasets: [
         {
-          label: activeTab.label,
+          label: this.getTabLabel(activeTab),
           data: sortedData.map((d) => d[activeTab.id]),
           backgroundColor: activeTab.color,
           borderRadius: 6,
@@ -138,6 +125,23 @@ export class WaterQualityChartComponent {
 
   public selectTab(tab: WaterTabOption) {
     this.selectedTab.set(tab);
+  }
+
+  public getTabLabel(tab: WaterTabOption): string {
+    const labelKeys: Partial<Record<WaterTabOption['id'], string>> = {
+      wqi_score: 'water.metric.wqi',
+      ph: 'water.metric.ph',
+      chlorides: 'water.metric.chlorides',
+      turbidity: 'water.metric.turbidity',
+      aluminum: 'water.metric.aluminum',
+    };
+
+    const labelKey = labelKeys[tab.id];
+    return labelKey ? this.languageService.translate(labelKey) : tab.label;
+  }
+
+  private getMonthName(month: number): string {
+    return this.languageService.translate(`month.short.${month}`);
   }
 
   public selectYear(year: number) {

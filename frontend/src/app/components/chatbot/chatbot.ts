@@ -2,12 +2,13 @@ import { Component, inject, signal, computed, ElementRef, ViewChild, HostListene
 import { CommonModule } from '@angular/common';
 import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 import { FormsModule } from '@angular/forms';
-import { ChatbotService } from '../../services/chatbotService'; 
+import { ChatbotService } from '../../services/chatbot.service'; 
+import { TranslatePipe } from '../../shared/translate.pipe';
 
 @Component({
   selector: 'ls-chatbot',
   standalone: true,
-  imports: [CommonModule, FormsModule, HlmSeparatorImports],
+  imports: [CommonModule, FormsModule, HlmSeparatorImports, TranslatePipe],
   templateUrl: './chatbot.html',
 })
 export class ChatbotComponent {

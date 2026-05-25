@@ -1,7 +1,8 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
-import { PollutantForecast } from '../../services/forecastService';
+import { PollutantForecast } from '../../services/forecast.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'ls-predictive-chart',
@@ -11,6 +12,8 @@ import { PollutantForecast } from '../../services/forecastService';
   templateUrl: './predictive-chart.html',
 })
 export class PredictiveChartComponent {
+  private readonly languageService = inject(LanguageService);
+
   public readonly data = input.required<PollutantForecast>();
   public readonly pollutantName = input.required<string>();
   public readonly color = input.required<string>();
@@ -36,7 +39,7 @@ export class PredictiveChartComponent {
       labels: allLabels,
       datasets: [
         {
-          label: `Historical ${pollutantName}`,
+          label: `${this.languageService.translate('forecast.historical')} ${pollutantName}`,
           data: actualPadded,
           borderColor: color,
           backgroundColor: color + '22',
@@ -49,7 +52,7 @@ export class PredictiveChartComponent {
           spanGaps: false,
         },
         {
-          label: `Predicted ${pollutantName}`,
+          label: `${this.languageService.translate('forecast.predicted')} ${pollutantName}`,
           data: predictedPadded,
           borderColor: color,
           backgroundColor: color + '22',
@@ -98,7 +101,7 @@ export class PredictiveChartComponent {
           labels: {
             usePointStyle: true,
             pointStyleWidth: 10,
-            font: { size: 12 },
+            font: { size: 14 },
             padding: 16,
           },
         },
