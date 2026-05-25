@@ -1,8 +1,8 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { AppSessionService } from './appSessionService';
-import { getApiErrorMessage } from '../shared/api-error';
+import { AppSessionService } from './appSession.service';
+import { getApiErrorMessage } from '../shared/api_error';
 
 export interface ChatMessage {
   role: 'user' | 'lucy';

@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { RegionForecast, PollutantForecast } from './forecastService';
+import { RegionForecast, PollutantForecast } from './forecast.service';
 
 export type PeakStatus = 'Well within limit' | 'Approaching limit' | 'Near limit' | 'Exceeds limit';
 
