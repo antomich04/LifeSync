@@ -100,7 +100,20 @@ export class AdvisorsPage {
     if (sourcesPart) {
       const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g;
       let match;
-      while ((match = linkRegex.exec(sourcesPart)) !== null) parsedLinks.push({ text: match[1], url: match[2] });
+      while ((match = linkRegex.exec(sourcesPart)) !== null) {
+        let linkText = match[1];
+
+        //Intercepts and translates the link text for the UI card if Greek is active
+        if(this.languageService.currentLanguage() === 'el'){
+          if (linkText.includes('YouTube')) {
+            linkText = 'Βίντεο στο YouTube';
+          } else if (linkText.includes('Wikipedia')) {
+            linkText = 'Άρθρο στη Wikipedia';
+          }
+        }
+
+        parsedLinks.push({ text: linkText, url: match[2] });
+      }
     }
 
     return { title: `${this.languageService.translate('advisors.microLessonPrefix')} · ${namePart.trim()}`, content: contentPart.trim(), links: parsedLinks };

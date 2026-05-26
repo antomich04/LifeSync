@@ -13,11 +13,13 @@
         </hlm-sheet-header>
 
         <div class="py-6">
-            
+
             @if (agentName() === 'Iris') {
-                <div class="prose prose-sm dark:prose-invert max-w-none report-markdown">
-                    <markdown [data]="markdownContent()" ngPreserveWhitespaces [disableSanitizer]="true"></markdown>
-                </div>
+            <div class="prose prose-sm dark:prose-invert max-w-none report-markdown">
+                <!-- Pass content through the translation sanitizer method -->
+                <markdown [data]="translateMarkdown(markdownContent())" ngPreserveWhitespaces [disableSanitizer]="true">
+                </markdown>
+            </div>
             }
 
         </div>
