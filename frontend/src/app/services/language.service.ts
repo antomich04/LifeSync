@@ -267,6 +267,10 @@ const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
     'report.title': 'Report from',
     'report.description': 'Live analysis generated specifically for your area.',
     'report.close': 'Close Report',
+    'notfound.title': 'Page not found',
+    'notfound.description': "The page you were looking for doesn't exist or may have been moved. Try heading back to a known location.",
+    'notfound.backHome': 'Back to Home Page',
+    'notfound.goBack': 'Go Back',
   },
   el: {
     'app.toggleSidebar': 'Εναλλαγή πλευρικής μπάρας',
@@ -518,6 +522,10 @@ const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
     'report.title': 'Αναφορά από',
     'report.description': 'Ζωντανή ανάλυση ειδικά για την περιοχή σου.',
     'report.close': 'Κλείσιμο αναφοράς',
+    'notfound.title': 'Η σελίδα δεν βρέθηκε',
+    'notfound.description': 'Η σελίδα που αναζητούσες δεν υπάρχει ή μπορεί να έχει μετακινηθεί. Δοκίμασε να επιστρέψεις σε γνωστό σημείο.',
+    'notfound.backHome': 'Πίσω στην Αρχική Σελίδα',
+    'notfound.goBack': 'Επιστροφή',
   },
 };
 
