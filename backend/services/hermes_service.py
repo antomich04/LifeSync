@@ -10,15 +10,15 @@ def extract_json_object(content: str) -> str:
     return match.group() if match else content
 
 
-async def run_hermes_agent(region: str, forecast_data: Dict[str, PollutantForecast]) -> List[dict]:
-    #Converts to simple dictionaries for the llm
+async def run_hermes_agent(region: str, forecast_data: Dict[str, PollutantForecast], language: str = "en") -> List[dict]:
     formatted_forecast = {k: v.model_dump() for k, v in forecast_data.items()}
 
     initial_state = {
         "messages": [HumanMessage(content="Find me protection products.")],
         "region": region,
         "forecast_data": formatted_forecast,
-        "target_agent": "hermes"
+        "target_agent": "hermes",
+        "language": language,
     }
 
     final_state = await master_graph.ainvoke(initial_state)
