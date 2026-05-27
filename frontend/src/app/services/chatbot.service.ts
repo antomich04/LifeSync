@@ -1,8 +1,9 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { AppSessionService } from './appSessionService';
-import { getApiErrorMessage } from '../shared/api-error';
+import { AppSessionService } from './appSession.service';
+import { LanguageService } from './language.service';
+import { getApiErrorMessage } from '../shared/api_error';
 
 export interface ChatMessage {
   role: 'user' | 'lucy';
@@ -27,6 +28,7 @@ export interface LucyResponse {
 export class ChatbotService {
   private http = inject(HttpClient);
   private sessionService = inject(AppSessionService);
+  private languageService = inject(LanguageService);
 
   public readonly isOpen = signal<boolean>(false);
   public readonly isLoading = signal<boolean>(false);
@@ -34,7 +36,7 @@ export class ChatbotService {
   public readonly messages = signal<ChatMessage[]>([
     {
       role: 'lucy',
-      content: 'Hi there! I am Lucy, your LifeSync assistant. How can I help you today?',
+      content: this.languageService.translate('chatbot.initialMessage'),
       timestamp: new Date()
     }
   ]);

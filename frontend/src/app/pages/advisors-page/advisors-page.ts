@@ -5,25 +5,55 @@ import { AgentState, Pollutant, Step } from '../../shared/types';
 import { AgentCardComponent } from '../../components/agent-card/agent-card';
 import { ReportSheetComponent } from '../../components/report-sheet/report-sheet';
 import { toast } from '@spartan-ng/brain/sonner';
-import { AppSessionService } from '../../services/appSessionService';
-import { IrisService } from '../../services/irisService';
-import { HermesService } from '../../services/hermesService';
-import { getApiErrorMessage, getApiErrorTitle } from '../../shared/api-error';
+import { AppSessionService } from '../../services/appSession.service';
+import { IrisService } from '../../services/iris.service';
+import { HermesService } from '../../services/hermes.service';
+import { getApiErrorMessage, getApiErrorTitle } from '../../shared/api_error';
+import { LanguageService } from '../../services/language.service';
+import { TranslatePipe } from '../../shared/translate.pipe';
+import { RegionNamePipe } from '../../shared/region_name.pipe';
 
 @Component({
   selector: 'ls-advisors',
   standalone: true,
-  imports: [CommonModule, AgentCardComponent, ReportSheetComponent],
+  imports: [CommonModule, AgentCardComponent, ReportSheetComponent, TranslatePipe, RegionNamePipe],
   templateUrl: './advisors-page.html',
 })
 export class AdvisorsPage {
   private sessionService = inject(AppSessionService);
   private irisService = inject(IrisService);
   private hermesService = inject(HermesService);
+  private languageService = inject(LanguageService);
   irisState = signal<AgentState>('idle');
   hermesState = signal<AgentState>('idle');
-  irisConfig = this.irisService.irisConfig;
-  hermesConfig = this.hermesService.hermesConfig;
+  irisConfig = computed(() => ({
+    ...this.irisService.irisConfig,
+    role: this.languageService.translate('agent.iris.role'),
+    description: this.languageService.translate('agent.iris.description'),
+    capabilitiesTitle: this.languageService.translate('agent.iris.capabilitiesTitle'),
+    capabilities: this.irisService.irisConfig.capabilities.map((capability, index) => ({
+      ...capability,
+      label: this.languageService.translate(`agent.iris.cap${index + 1}.label`),
+      description: this.languageService.translate(`agent.iris.cap${index + 1}.description`),
+    })),
+    sampleTitle: this.languageService.translate('agent.iris.sampleTitle'),
+    buttonText: this.languageService.translate('agent.iris.buttonText'),
+    buttonLoadingText: this.languageService.translate('agent.iris.loadingText'),
+  }));
+  hermesConfig = computed(() => ({
+    ...this.hermesService.hermesConfig,
+    role: this.languageService.translate('agent.hermes.role'),
+    description: this.languageService.translate('agent.hermes.description'),
+    capabilitiesTitle: this.languageService.translate('agent.hermes.capabilitiesTitle'),
+    capabilities: this.hermesService.hermesConfig.capabilities.map((capability, index) => ({
+      ...capability,
+      label: this.languageService.translate(`agent.hermes.cap${index + 1}.label`),
+      description: this.languageService.translate(`agent.hermes.cap${index + 1}.description`),
+    })),
+    sampleTitle: this.languageService.translate('agent.hermes.sampleTitle'),
+    buttonText: this.languageService.translate('agent.hermes.buttonText'),
+    buttonLoadingText: this.languageService.translate('agent.hermes.loadingText'),
+  }));
 
   //Based on the latest selected region from forecast page
   public readonly selectedRegion = computed(() => this.sessionService.activeContext()?.region || '');
@@ -53,27 +83,40 @@ export class AdvisorsPage {
     const pollutants = this.activePollutants();
 
     if (!report) {
-      if (pollutants.length === 0) return { title: 'Ready · Clean Air', content: 'Air quality levels are excellent. No elevated pollutants detected.', links: [] };
-      return { title: `Ready to research ${pollutants.length} pollutant(s)`, content: 'Click "Ask Iris to Research" to generate a live, AI-curated micro-lesson.', links: [] };
+      if (pollutants.length === 0) return { title: this.languageService.translate('advisors.readyCleanAir'), content: this.languageService.translate('advisors.cleanAirContent'), links: [] };
+      return { title: this.languageService.translate('advisors.readyResearch', { count: pollutants.length }), content: this.languageService.translate('advisors.researchContent'), links: [] };
     }
 
     const sections = report.split('### **');
-    if (sections.length <= 1) return { title: 'Micro-lesson · Complete', content: 'Your custom air quality report has been generated.', links: [] };
+    if (sections.length <= 1) return { title: this.languageService.translate('advisors.microLessonComplete'), content: this.languageService.translate('advisors.microLessonContent'), links: [] };
 
     //Extracts the last section and splits into Name, Content, and Sources
     const lastSection = sections.pop() || '';
     const [namePart, ...rest] = lastSection.split('**');
     const body = rest.join('**').trim();
-    const [contentPart, sourcesPart] = body.split('Sources & Additional Information:');
+    const [contentPart, sourcesPart] = this.splitReportSources(body);
     
     const parsedLinks: { text: string; url: string }[] = [];
     if (sourcesPart) {
       const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g;
       let match;
-      while ((match = linkRegex.exec(sourcesPart)) !== null) parsedLinks.push({ text: match[1], url: match[2] });
+      while ((match = linkRegex.exec(sourcesPart)) !== null) {
+        let linkText = match[1];
+
+        //Intercepts and translates the link text for the UI card if Greek is active
+        if(this.languageService.currentLanguage() === 'el'){
+          if (linkText.includes('YouTube')) {
+            linkText = 'Βίντεο στο YouTube';
+          } else if (linkText.includes('Wikipedia')) {
+            linkText = 'Άρθρο στη Wikipedia';
+          }
+        }
+
+        parsedLinks.push({ text: linkText, url: match[2] });
+      }
     }
 
-    return { title: `Micro-lesson · ${namePart.trim()}`, content: contentPart.trim(), links: parsedLinks };
+    return { title: `${this.languageService.translate('advisors.microLessonPrefix')} · ${namePart.trim()}`, content: contentPart.trim(), links: parsedLinks };
   });
 
   public readonly dynamicHermesInsight = computed(() => {
@@ -83,63 +126,64 @@ export class AdvisorsPage {
     if (products.length === 0) {
       if (pollutants.length === 0) {
         return { 
-          title: 'Ready · Clean Air', 
-          content: 'No protection products needed right now.', 
+          title: this.languageService.translate('advisors.readyCleanAir'), 
+          content: this.languageService.translate('advisors.noProductsNeeded'), 
           items: [] 
         };
       }
       return { 
-        title: `Ready to search for ${pollutants.length} pollutant(s)`, 
-        content: 'Click "Ask Hermes to Shop" to scan Skroutz for live mitigation products.', 
+        title: this.languageService.translate('advisors.readySearch', { count: pollutants.length }), 
+        content: this.languageService.translate('advisors.searchContent'), 
         items: [] 
       };
     }
 
     return { 
-      title: 'Latest Recommendations', 
+      title: this.languageService.translate('advisors.latestRecommendations'), 
       content: '', 
       items: products
     };
   });
 
-  howItWorks: Step[] = [
+  howItWorks = computed<Step[]>(() => [
     {
       number: 1,
-      title: 'Reads your air data',
-      description:
-        'The agent checks the current pollutant readings for your selected region to understand which thresholds are exceeded.',
+      title: this.languageService.translate('advisors.step1.title'),
+      description: this.languageService.translate('advisors.step1.description'),
     },
     {
       number: 2,
-      title: 'Searches the internet',
-      description:
-        'Iris searches for educational content; Hermes queries Skroutz - both targeted to the specific pollutants detected.',
+      title: this.languageService.translate('advisors.step2.title'),
+      description: this.languageService.translate('advisors.step2.description'),
     },
     {
       number: 3,
-      title: 'Delivers results',
-      description:
-        'You receive curated micro-lessons or ranked product recommendations, with sources and direct links included.',
+      title: this.languageService.translate('advisors.step3.title'),
+      description: this.languageService.translate('advisors.step3.description'),
     },
-  ];
+  ]);
 
   activateAgent(agent: 'iris' | 'hermes'): void {
     const context = this.sessionService.activeContext();
     if(!context) {
-      toast('📍 Region Required', { description: 'Please go back to the Forecast page and select a municipality first.' });
+      toast(this.languageService.translate('advisors.toast.regionRequired.title'), {
+        description: this.languageService.translate('advisors.toast.regionRequired.description'),
+      });
       return;
     }
 
     //Grabs the pre-filtered actionable pollutants from the service
     const actionable = this.sessionService.actionablePollutants();
     if (Object.keys(actionable).length === 0) {
-      toast('✅ Air Quality Looks Fine', { description: 'No pollutants require attention right now.' });
+      toast(this.languageService.translate('advisors.toast.airFine.title'), {
+        description: this.languageService.translate('advisors.toast.airFine.description'),
+      });
       this.irisState.set('idle');
       this.hermesState.set('idle');
       return;
     }
 
-    const payload = { region: context.region, forecast_data: actionable };
+    const payload = { region: context.region, forecast_data: actionable, language: this.languageService.currentLanguage() };
 
     if (agent === 'iris') {
       this.irisState.set('loading');
@@ -156,8 +200,8 @@ export class AdvisorsPage {
         },
         error: (err) => {
           this.irisState.set('idle');
-          toast(getApiErrorTitle(err, 'Iris Request Failed'), {
-            description: getApiErrorMessage(err, 'Iris could not generate a report right now. Please try again.'),
+          toast(getApiErrorTitle(err, this.languageService.translate('advisors.error.irisTitle')), {
+            description: getApiErrorMessage(err, this.languageService.translate('advisors.error.irisDescription')),
           });
         },
       });
@@ -171,14 +215,14 @@ export class AdvisorsPage {
           this.activeProducts.set(products);
           this.sessionService.updateAgentData('hermes', products);
           
-          toast('🛒 Hermes finished shopping', { 
-            description: `Found ${products.length} product recommendations for your area.` 
+          toast(this.languageService.translate('advisors.toast.hermesDone.title'), { 
+            description: this.languageService.translate('advisors.toast.hermesDone.description', { count: products.length }) 
           });
         },
         error: (err) => {
           this.hermesState.set('idle');
-          toast(getApiErrorTitle(err, 'Hermes Request Failed'), {
-            description: getApiErrorMessage(err, 'Hermes could not fetch recommendations right now. Please try again.'),
+          toast(getApiErrorTitle(err, this.languageService.translate('advisors.error.hermesTitle')), {
+            description: getApiErrorMessage(err, this.languageService.translate('advisors.error.hermesDescription')),
           });
         },
       });
@@ -187,5 +231,31 @@ export class AdvisorsPage {
 
   getHermesIconPath(iconName: string): string {
     return this.hermesService.getIconPath(iconName);
+  }
+
+  getHermesPriceLabel(price: string | null | undefined): string {
+    if (!price) return '';
+
+    const normalizedPrice = price.trim().toLowerCase();
+    if (normalizedPrice === 'check site' || normalizedPrice === 'check website') {
+      return this.languageService.translate('advisors.checkSite');
+    }
+
+    return price;
+  }
+
+  private splitReportSources(body: string): [string, string | undefined] {
+    const sourceHeadings = [
+      'Sources & Additional Information:',
+      'Πηγές & Πρόσθετες Πληροφορίες:',
+      'Πηγές και πρόσθετες πληροφορίες:',
+    ];
+
+    for (const heading of sourceHeadings) {
+      const [content, sources] = body.split(heading);
+      if (sources !== undefined) return [content, sources];
+    }
+
+    return [body, undefined];
   }
 }

@@ -1,19 +1,27 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { RegionSearchComponent } from '../../components/region-searchbar/region-searchbar';
 import { LiveDataCardComponent } from '../../components/live-data-card/live-data-card';
 import { HistoricalChartComponent } from '../../components/historical-chart/historical-chart';
+import { WaterQualityChartComponent } from '../../components/water-quality-chart/water-quality-chart';
+import { TranslatePipe } from '../../shared/translate.pipe';
+import { REGION_CAPABILITIES } from '../../shared/region_capabilities';
+import { RegionNamePipe } from '../../shared/region_name.pipe';
 
 @Component({
   selector: 'ls-dashboard-page',
   standalone: true,
-  imports: [RegionSearchComponent, LiveDataCardComponent, HistoricalChartComponent],
+  imports: [RegionSearchComponent, LiveDataCardComponent, HistoricalChartComponent, WaterQualityChartComponent, TranslatePipe, RegionNamePipe],
   templateUrl: './dashboard-page.html'
 })
 export class DashboardPage {
 
   public readonly selectedRegion = signal<string | null>(null);
 
-  //Shown as quick-pick chips in the empty state
+  public readonly selectedRegionHasWater = computed(() => {
+    const region = this.selectedRegion();
+    return region ? (REGION_CAPABILITIES[region]?.water ?? false) : false;
+  });
+
   public readonly quickPicks = [
     'Thessaloniki',
     'Kalamaria',

@@ -2,9 +2,9 @@
     <div hlmCardHeader class="flex flex-row items-center justify-between border-b border-border/50 pb-4">
         <div>
             <h3 hlmCardTitle class="text-2xl text-foreground">
-                Overview for: <span class="text-primary">{{ displayRegion() }}</span>
+                {{ 'live.overviewFor' | translate }} <span class="text-primary">{{ displayRegion() | regionName }}</span>
             </h3>
-            <p class="text-xs text-muted-foreground mt-1 italic">* Live data provided by the OpenWeather Air Pollution API.</p>
+            <p class="text-xs text-muted-foreground mt-1 italic">{{ 'live.provider' | translate }}</p>
         </div>
     </div>
 
@@ -13,7 +13,7 @@
         @if (isLoading()) {
         <div class="flex flex-col items-center justify-center h-48 gap-3">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            <p class="text-xs text-muted-foreground animate-pulse">Fetching live readings…</p>
+            <p class="text-xs text-muted-foreground animate-pulse">{{ 'live.fetching' | translate }}</p>
         </div>
         }
 
@@ -25,7 +25,7 @@
                 <line x1="12" y1="9" x2="12" y2="13"></line>
                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
             </svg>
-            <p class="text-lg font-semibold text-foreground">Data Retrieval Failed</p>
+            <p class="text-lg font-semibold text-foreground">{{ 'live.failed' | translate }}</p>
             <p class="text-sm text-muted-foreground mt-1">{{ errorMessage() }}</p>
         </div>
         }
@@ -35,7 +35,7 @@
 
             <!-- AQI score with radial arc -->
             <div class="md:col-span-1 flex flex-col justify-center items-center p-6 border shadow-sm rounded-2xl border-border bg-card/50 gap-4">
-                <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest self-start">Overall Air Quality</p>
+                <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest self-start">{{ 'live.overall' | translate }}</p>
 
                 <div class="relative flex items-center justify-center w-36 h-36">
                     <!-- SVG radial arc -->
@@ -62,7 +62,7 @@
 
                 <div class="px-4 py-1.5 text-sm font-bold rounded-full select-none transition-colors"
                     [class]="getStatusColorClass(liveMetrics()?.status)">
-                    {{ liveMetrics()?.status }}
+                    {{ getTranslatedStatus(liveMetrics()?.status) }}
                 </div>
             </div>
 
@@ -95,7 +95,7 @@
                                 [style.background]="getThresholdColor(p.value, p.safeMax)">
                             </div>
                         </div>
-                        <p class="text-[10px] text-muted-foreground">Safe limit: {{ p.safeMax }} {{ p.unit }}</p>
+                        <p class="text-[10px] text-muted-foreground">{{ 'live.safeLimit' | translate }} {{ p.safeMax }} {{ p.unit }}</p>
                     </div>
                     }
 

@@ -16,17 +16,15 @@
                 <div
                     class="inline-flex items-center gap-2 px-3 py-1 mb-2 text-sm font-medium rounded-full bg-primary-foreground/10 text-primary-foreground">
                     <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-                    AI Advisors
+                    {{ 'advisors.badge' | translate }}
                 </div>
 
                 <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
-                    Your Personal AI Advisors
+                    {{ 'advisors.title' | translate }}
                 </h1>
 
                 <p class="text-lg text-primary-foreground/80 leading-relaxed">
-                    Two specialized agents work continuously on your behalf - one to educate you on the air pollutants
-                    affecting your area, and one to recommend the right protection products from trusted Greek
-                    marketplaces.
+                    {{ 'advisors.description' | translate }}
                 </p>
             </div>
 
@@ -50,16 +48,15 @@
     <!-- Pollutant context strip — drives both agents -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-1">
         <div>
-            <p class="text-sm font-semibold text-foreground">Actionable Pollutants for: {{ selectedRegion() }}</p>
-            <p class="text-xs text-muted-foreground mt-0.5">Showing only pollutants that are worsening or
-                approaching/exceeding safe limits.</p>
+            <p class="text-sm font-semibold text-foreground">{{ 'advisors.pollutantsFor' | translate }} {{ selectedRegion() | regionName }}</p>
+            <p class="text-xs text-muted-foreground mt-0.5">{{ 'advisors.pollutantsDescription' | translate }}</p>
         </div>
 
         <div class="flex flex-wrap gap-2">
             @if (activePollutants().length === 0) {
             <span
                 class="text-xs font-medium text-status-good bg-status-good/10 px-3 py-1 rounded-full border border-status-good/20">
-                All clear
+                {{ 'advisors.allClear' | translate }}
             </span>
             } @else {
             @for (pollutant of activePollutants(); track pollutant.key) {
@@ -77,7 +74,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- ── Agent 1 · Iris ── -->
-        <ls-agent-card class="block h-full" [config]="irisConfig" [state]="irisState()"
+        <ls-agent-card class="block h-full" [config]="irisConfig()" [state]="irisState()"
             (activate)="activateAgent($event)">
             
             @for (insight of [dynamicIrisInsight()]; track insight.title) {
@@ -122,7 +119,7 @@
                             <line x1="12" y1="16" x2="12" y2="12" />
                             <line x1="12" y1="8" x2="12.01" y2="8" />
                         </svg>
-                        <span class="italic">Powered by Iris</span>
+                        <span class="italic">{{ 'advisors.poweredByIris' | translate }}</span>
                     </div>
                     }
                 </div>
@@ -131,7 +128,7 @@
         </ls-agent-card>
 
         <!-- ── Agent 2 · Hermes ── -->
-        <ls-agent-card class="block h-full" [config]="hermesConfig" [state]="hermesState()"
+        <ls-agent-card class="block h-full" [config]="hermesConfig()" [state]="hermesState()"
             (activate)="activateAgent($event)">
 
             @if (dynamicHermesInsight(); as insight) {
@@ -177,7 +174,7 @@
                             @if (product.url) {
                             <a [href]="product.url" target="_blank" rel="noopener noreferrer"
                                 class="inline-flex items-center gap-1 mt-1 text-[10px] font-bold text-agent-hermes hover:text-agent-hermes/80 hover:underline transition-colors w-fit">
-                                {{ product.price }}
+                                {{ getHermesPriceLabel(product.price) }}
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
@@ -187,7 +184,7 @@
                                 </svg>
                             </a>
                             } @else {
-                            <p class="text-[10px] font-semibold text-muted-foreground mt-1">{{ product.price }}</p>
+                            <p class="text-[10px] font-semibold text-muted-foreground mt-1">{{ getHermesPriceLabel(product.price) }}</p>
                             }
                         </div>
 
@@ -199,7 +196,7 @@
             }
 
             <div class="flex items-center gap-2 mt-2">
-                <p class="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Sources:</p>
+                <p class="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">{{ 'advisors.sources' | translate }}</p>
                 <span
                     class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-agent-hermes/10 text-agent-hermes border border-agent-hermes/20">skroutz.gr</span>
             </div>
@@ -211,13 +208,13 @@
     <section class="p-8 md:p-8 rounded-2xl border border-border bg-card shadow-sm flex flex-col gap-6">
 
         <div>
-            <h2 class="text-lg font-semibold tracking-tight text-foreground">How the advisors work</h2>
-            <p class="text-sm text-muted-foreground mt-1">A simple three-step process, every time you ask.</p>
+            <h2 class="text-lg font-semibold tracking-tight text-foreground">{{ 'advisors.how.title' | translate }}</h2>
+            <p class="text-sm text-muted-foreground mt-1">{{ 'advisors.how.subtitle' | translate }}</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-            @for (step of howItWorks; track step.number) {
+            @for (step of howItWorks(); track step.number) {
             <div class="flex flex-col gap-3">
                 <div class="flex items-center gap-3">
                     <span
@@ -238,9 +235,7 @@
         </div>
 
         <p class="text-[11px] text-muted-foreground italic border-t border-border/50 pt-4">
-            * Advisors retrieve live information from the internet and Greek marketplaces. Recommendations are
-            contextual and based on current pollutant readings - always verify prices and availability on the
-            retailer's website before purchasing.
+            {{ 'advisors.disclaimer' | translate }}
         </p>
 
     </section>

@@ -31,9 +31,9 @@
                     </svg>
                 </div>
                 <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
-                    <span class="text-sm truncate w-full text-left">Dashboard</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">Live air
-                        quality</span>
+                    <span class="text-sm truncate w-full text-left">{{ 'sidebar.dashboard.title' | translate }}</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">{{
+                        'sidebar.dashboard.subtitle' | translate }}</span>
                 </div>
             </button>
 
@@ -56,9 +56,9 @@
                     </svg>
                 </div>
                 <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
-                    <span class="text-sm truncate w-full text-left">Forecast</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">7-day ML
-                        predictions</span>
+                    <span class="text-sm truncate w-full text-left">{{ 'sidebar.forecast.title' | translate }}</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">{{
+                        'sidebar.forecast.subtitle' | translate }}</span>
                 </div>
             </button>
 
@@ -81,9 +81,9 @@
                     </svg>
                 </div>
                 <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
-                    <span class="text-sm truncate w-full text-left">Advisors</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">Iris & Hermes
-                        agents</span>
+                    <span class="text-sm truncate w-full text-left">{{ 'sidebar.advisors.title' | translate }}</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">{{
+                        'sidebar.advisors.subtitle' | translate }}</span>
                 </div>
             </button>
 
@@ -104,9 +104,9 @@
                     </svg>
                 </div>
                 <div class="flex flex-col items-start leading-tight flex-1 min-w-0">
-                    <span class="text-sm truncate w-full text-left">Support</span>
-                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">Lucy &
-                        FAQ</span>
+                    <span class="text-sm truncate w-full text-left">{{ 'sidebar.support.title' | translate }}</span>
+                    <span class="text-xs text-sidebar-foreground/50 font-normal truncate w-full text-left">{{
+                        'sidebar.support.subtitle' | translate }}</span>
                 </div>
             </button>
 
@@ -114,11 +114,29 @@
     </div>
 
     <div hlmSidebarHeader class="mt-auto px-3 pb-4 pt-3 border-t border-sidebar-foreground/10">
-        <div class="flex items-center justify-between px-1">
+        <div class="flex items-center justify-between gap-2 px-1">
             <div class="flex flex-col gap-0.5 min-w-0">
                 <span
                     class="text-xs font-semibold text-sidebar-foreground/80 uppercase tracking-wider truncate">LifeSync</span>
-                <span class="text-xs text-sidebar-foreground/60 truncate">Thessaloniki</span>
+                <span class="text-xs text-sidebar-foreground/60 truncate">{{ 'sidebar.location' | translate }}</span>
+            </div>
+
+            <div class="flex items-center rounded-full border border-sidebar-foreground/20 bg-sidebar-foreground/8 p-0.5 shrink-0"
+                role="group" aria-label="Language toggle">
+                <button type="button" (click)="setLanguage('en')"
+                    [class.bg-sidebar-primary]="languageService.currentLanguage() === 'en'"
+                    [class.text-sidebar-primary-foreground]="languageService.currentLanguage() === 'en'"
+                    [class.text-sidebar-foreground/50]="languageService.currentLanguage() !== 'en'"
+                    class="px-2.5 py-1 rounded-full text-[11px] font-medium transition-all duration-150 leading-none">
+                    EN
+                </button>
+                <button type="button" (click)="setLanguage('el')"
+                    [class.bg-sidebar-primary]="languageService.currentLanguage() === 'el'"
+                    [class.text-sidebar-primary-foreground]="languageService.currentLanguage() === 'el'"
+                    [class.text-sidebar-foreground/50]="languageService.currentLanguage() !== 'el'"
+                    class="px-2.5 py-1 rounded-full text-[11px] font-medium transition-all duration-150 leading-none">
+                    GR
+                </button>
             </div>
         </div>
     </div>

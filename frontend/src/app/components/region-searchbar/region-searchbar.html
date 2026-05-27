@@ -1,35 +1,37 @@
 <section class="flex flex-col gap-4">
 
     <div class="flex items-end justify-between px-1">
-        <h2 class="lg:text-2xl md:text-lg sm:text-sm font-semibold tracking-tight text-foreground">Select your region</h2>
-        <span class="text-xs text-muted-foreground pb-0.5">{{ allRegionsCount }} municipalities available</span>
+        <h2 class="lg:text-2xl md:text-lg sm:text-sm font-semibold tracking-tight text-foreground">{{ 'region.title' |
+            translate }}</h2>
+        <span class="text-xs text-muted-foreground pb-0.5">{{ allRegionsCount }} {{ 'region.available' | translate
+            }}</span>
     </div>
 
     <hlm-command class="w-full border shadow-sm rounded-2xl border-border bg-card overflow-hidden transition-all"
         (searchChange)="onSearch($event)" (focusout)="onFocusOut($event)" (click)="focusInput()">
 
-        <hlm-command-input #commandInput placeholder="Search municipality…" />
+        <hlm-command-input #commandInput [placeholder]="'region.placeholder' | translate" />
 
         <hlm-command-list [class.hidden]="!isDropdownOpen()" class="max-h-[400px] border-t border-border">
 
-            <div *hlmCommandEmptyState hlmCommandEmpty
-                class="py-10 text-center text-sm text-muted-foreground">
-                No municipality found.
+            <div *hlmCommandEmptyState hlmCommandEmpty class="py-10 text-center text-sm text-muted-foreground">
+                {{ 'region.notFound' | translate }}
             </div>
 
             <hlm-command-group>
                 <button id="hidden-cmd-item" hlm-command-item value="-" class="hidden"></button>
 
-                <hlm-command-group-label
-                    class="text-muted-foreground text-xs uppercase tracking-wider py-3 px-6">
-                    Thessaloniki Municipalities
+                <hlm-command-group-label class="text-muted-foreground text-xs uppercase tracking-wider py-3 px-6">
+                    {{ 'region.group' | translate }}
                 </hlm-command-group-label>
 
                 @for (region of displayedRegions(); track region) {
                 <button hlm-command-item [value]="region" (selected)="onRegionSelect(region)"
-                    class="cursor-pointer px-6 py-3.5 text-base group">
+                    class="cursor-pointer px-6 py-3.5 text-base group flex items-center justify-between">
+
                     <div class="flex items-center gap-3">
-                        <div class="flex-shrink-0 w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <div
+                            class="flex-shrink-0 w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-primary" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -37,8 +39,30 @@
                                 <circle cx="12" cy="10" r="3"></circle>
                             </svg>
                         </div>
-                        {{ region }}
+                        <span>{{ region | regionName }}</span>
                     </div>
+
+                    @if (showCapabilityIcons()) {
+                    <div class="flex items-center gap-2">
+                        <!-- Green Leaf -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-primary"
+                            title="Air Quality Available" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z" />
+                            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                        </svg>
+
+                        <!-- Water Drop -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-opacity"
+                            [class.text-sky-500]="regionCapabilities[region].water"
+                            [class.opacity-20]="!regionCapabilities[region].water" title="Water Quality Available"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                        </svg>
+                    </div>
+                    }
                 </button>
                 }
             </hlm-command-group>

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink } from "@angular/router";
+import { TranslatePipe } from '../../shared/translate.pipe';
 
 @Component({
   selector: 'ls-home-page',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css'
 })

@@ -4,10 +4,12 @@ import { CommonModule } from '@angular/common';
 import { RegionSearchComponent } from '../../components/region-searchbar/region-searchbar';
 import { ForecastCard } from '../../components/forecast-card/forecast-card';
 import { PredictiveChartComponent } from '../../components/predictive-chart/predictive-chart';
-import { ForecastService, RegionForecast, PollutantForecast } from '../../services/forecastService';
-import { AppSessionService, PollutantRiskSummary } from '../../services/appSessionService';
+import { ForecastService, RegionForecast, PollutantForecast } from '../../services/forecast.service';
+import { AppSessionService, PollutantRiskSummary } from '../../services/appSession.service';
 import { SAFE_LIMITS, getPeakStatus } from '../../shared/pollutant_limits';
-import { getApiErrorMessage } from '../../shared/api-error';
+import { getApiErrorMessage } from '../../shared/api_error';
+import { TranslatePipe } from '../../shared/translate.pipe';
+import { RegionNamePipe } from '../../shared/region_name.pipe';
 
 export interface TabOption {
   id: 'no2' | 'o3' | 'co' | 'so2';
@@ -18,7 +20,7 @@ export interface TabOption {
 @Component({
   selector: 'ls-forecast-page',
   standalone: true,
-  imports: [CommonModule, RegionSearchComponent, ForecastCard, PredictiveChartComponent],
+  imports: [CommonModule, RegionSearchComponent, ForecastCard, PredictiveChartComponent, TranslatePipe, RegionNamePipe],
   templateUrl: './forecast-page.html'
 })
 export class ForecastPage {

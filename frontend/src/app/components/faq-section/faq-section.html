@@ -1,13 +1,13 @@
 <section class="flex flex-col gap-4">
 
     <div>
-        <h2 class="text-xl font-semibold tracking-tight text-foreground">Frequently Asked Questions</h2>
-        <p class="text-sm text-muted-foreground mt-1">Quick answers to the most common questions.</p>
+        <h2 class="text-xl font-semibold tracking-tight text-foreground">{{ 'faq.title' | translate }}</h2>
+        <p class="text-sm text-muted-foreground mt-1">{{ 'faq.subtitle' | translate }}</p>
     </div>
 
     <div class="flex flex-col gap-3">
 
-        @for (faq of faqs; track faq.id) {
+        @for (faq of faqs(); track faq.id) {
         <div
             class="p-5 border border-border rounded-2xl bg-card shadow-sm hover:border-primary/30 hover:shadow-md transition-all duration-200 cursor-pointer"
             (click)="toggleFaq(faq.id)">
@@ -43,7 +43,7 @@
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                     </svg>
-                    Ask Lucy for more details
+                    {{ 'faq.askMore' | translate }}
                 </button>
             </div>
             }

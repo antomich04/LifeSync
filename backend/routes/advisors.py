@@ -18,7 +18,8 @@ async def invoke_iris(request: Request,payload: AgentRequest):
     try:
         result = await run_iris_agent(
             region=payload.region, 
-            forecast_data=payload.forecast_data
+            forecast_data=payload.forecast_data,
+            language=payload.language,
         )
         
         return AgentResponse(
@@ -43,7 +44,8 @@ async def invoke_hermes(request: Request, payload: AgentRequest):
     try:
         products_list = await run_hermes_agent(
             region=payload.region, 
-            forecast_data=payload.forecast_data
+            forecast_data=payload.forecast_data,
+            language=payload.language,
         )
         
         return AgentResponse(

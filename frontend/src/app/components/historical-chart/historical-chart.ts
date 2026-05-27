@@ -3,9 +3,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { forkJoin } from 'rxjs';
-import { AqiService } from '../../services/aqiService';
-import { ParticlesService, HistoricalParticleResponse } from '../../services/particlesService';
-import { getApiErrorMessage } from '../../shared/api-error';
+import { AqiService } from '../../services/aqi.service';
+import { ParticlesService, HistoricalParticleResponse } from '../../services/particles.service';
+import { getApiErrorMessage } from '../../shared/api_error';
+import { TranslatePipe } from '../../shared/translate.pipe';
+import { LanguageService } from '../../services/language.service';
 
 export interface TabOption {
   id: string;
@@ -17,7 +19,7 @@ export interface TabOption {
 @Component({
   selector: 'ls-historical-chart',
   standalone: true,
-  imports: [BaseChartDirective],
+  imports: [BaseChartDirective, TranslatePipe],
   providers: [provideCharts(withDefaultRegisterables())],
   templateUrl: './historical-chart.html'
 })
@@ -25,6 +27,7 @@ export class HistoricalChartComponent {
 
   private aqiService = inject(AqiService);
   private particlesService = inject(ParticlesService);
+  private languageService = inject(LanguageService);
   private destroyRef = inject(DestroyRef);
 
   private _region!: string;
@@ -40,6 +43,20 @@ export class HistoricalChartComponent {
   //UI State
   public readonly availableYears = signal<number[]>([]);
   public readonly selectedYear = signal<number>(0);
+  
+  public readonly visibleYears = computed(() => {
+    const current = this.selectedYear();
+    const all = this.availableYears();
+    const currentIndex = all.indexOf(current);
+    
+    if (currentIndex === -1) return [];
+    
+    const start = Math.max(0, currentIndex - 1);
+    const end = Math.min(all.length - 1, currentIndex + 1);
+    
+    return all.slice(start, end + 1);
+  });
+
   public readonly aqiData = signal<(number | null)[]>([]);
   public readonly particleData = signal<HistoricalParticleResponse | null>(null);
   public readonly errorMessage = signal<string | null>(null);
@@ -53,9 +70,16 @@ export class HistoricalChartComponent {
   ];
 
   public selectedTab = signal<TabOption>(this.tabs[0]);
+  public readonly isDropdownOpen = signal<boolean>(false);
 
   public selectTab(tab: TabOption) {
     this.selectedTab.set(tab);
+  }
+
+  public getTabLabel(tab: TabOption): string {
+    if (tab.id === 'AQI') return this.languageService.translate('history.meanAqi');
+
+    return tab.label;
   }
 
   //Maps the correct array based on the active tab
@@ -66,17 +90,14 @@ export class HistoricalChartComponent {
     let chartLabels: string[] = [];
     let datasetData: (number | null)[] = [];
 
-    //Helper array for safe date mapping
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
     if (activeTab.id === 'AQI') {
-      chartLabels = monthNames;
+      chartLabels = this.getMonthNames();
       datasetData = this.aqiData();
     } else if (pData) {
       //Maps the 365 "YYYY-MM-DD" strings securely into short month names
       chartLabels = pData.dates.map(dateStr => {
         const monthIndex = parseInt(dateStr.split('-')[1], 10) - 1;
-        return monthNames[monthIndex];
+        return this.getMonthName(monthIndex + 1);
       });
       
       if (activeTab.id === 'NO2') datasetData = pData.no2;
@@ -89,7 +110,7 @@ export class HistoricalChartComponent {
       labels: chartLabels,
       datasets: [
         {
-          label: activeTab.label,
+          label: this.getTabLabel(activeTab),
           data: datasetData,
           borderColor: activeTab.color,
           backgroundColor: activeTab.bgColor,
@@ -143,7 +164,7 @@ export class HistoricalChartComponent {
                 return tooltipItems[0].label; 
               } else if (pData && pData.dates) {
                 //For particles, grabs the exact date string
-                return pData.dates[dataIndex];
+                return this.formatDateLabel(pData.dates[dataIndex]);
               }
               return tooltipItems[0].label;
             }
@@ -195,6 +216,19 @@ export class HistoricalChartComponent {
           this.errorMessage.set(message);
         }
       });
+  }
+
+  private getMonthNames(): string[] {
+    return Array.from({ length: 12 }, (_, index) => this.getMonthName(index + 1));
+  }
+
+  private getMonthName(month: number): string {
+    return this.languageService.translate(`month.short.${month}`);
+  }
+
+  private formatDateLabel(date: string): string {
+    const [year, month, day] = date.split('-');
+    return `${day} ${this.getMonthName(Number(month))} ${year}`;
   }
 
   public selectYear(year: number) {

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { IrisPayload as HermesPayload } from './irisService'; //Same payload structure
+import { IrisPayload as HermesPayload } from './iris.service'; //Same payload structure
 import { AgentConfig } from '../shared/types';
 
 export interface HermesResponse {

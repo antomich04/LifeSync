@@ -1,14 +1,31 @@
 from langchain_community.tools import DuckDuckGoSearchResults
 from langchain_core.tools import tool
 import re
+from urllib.parse import urlparse
 
-ddg_search = DuckDuckGoSearchResults(num_results=10, output_format="list")
+ddg_search = DuckDuckGoSearchResults(num_results=15, output_format="list")
 
 POLLUTANT_QUERIES = {
-    "NO2": ["καθαριστής αέρα φίλτρο ενεργού άνθρακα site:skroutz.gr", "air purifier carbon filter site:skroutz.gr"],
-    "SO2": ["καθαριστής αέρα ιονιστής άνθρακας site:skroutz.gr", "ιονιστής αέρα hepa site:skroutz.gr"],
-    "O3":  ["καθαριστής αέρα smart hepa site:skroutz.gr", "air purifier smart wifi site:skroutz.gr"],
-    "CO":  ["ανιχνευτής μονοξειδίου του άνθρακα site:skroutz.gr","CO detector site:skroutz.gr"]
+    "NO2": [
+        "καθαριστής αέρα φίλτρο ενεργού άνθρακα site:skroutz.gr",
+        "air purifier carbon filter site:skroutz.gr",
+        "φίλτρο hepa καθαριστής αέρα site:skroutz.gr",
+    ],
+    "SO2": [
+        "καθαριστής αέρα ιονιστής site:skroutz.gr",
+        "ιονιστής αέρα hepa site:skroutz.gr",
+        "air purifier ionizer site:skroutz.gr",
+    ],
+    "O3":  [
+        "καθαριστής αέρα smart hepa site:skroutz.gr",
+        "air purifier smart wifi site:skroutz.gr",
+        "smart hepa καθαριστής αέρα site:skroutz.gr",
+    ],
+    "CO":  [
+        "ανιχνευτής μονοξειδίου του άνθρακα site:skroutz.gr",
+        "CO detector site:skroutz.gr",
+        "αισθητήρας μονοξειδίου site:skroutz.gr",
+    ]
 }
 
 ALLOWED_DOMAIN = {"skroutz.gr"}
@@ -16,14 +33,17 @@ BLOCKED_PATTERNS = re.compile(r"blog|guide|news|article|review|beauty|cosmetic|s
 
 
 def is_valid_product_url(url: str) -> bool:
-    domain_ok = any(d in url for d in ALLOWED_DOMAIN)
+    parsed_url = urlparse(url)
+    domain_ok = any(parsed_url.netloc.endswith(d) for d in ALLOWED_DOMAIN)
+    path = parsed_url.path
 
-    #Blocks the homepage and generic search endpoints.
-    is_item_page = "/s/" in url
+    lower_path = path.lower()
     
-    not_editorial = not BLOCKED_PATTERNS.search(url)
-    
-    return domain_ok and is_item_page and not_editorial
+    #Filters out category pages (/c/) and discussion forums (/discussion instead of .html at the end of URL)
+    is_product_page = lower_path.endswith(".html") and "/s/" in lower_path
+    not_editorial = not BLOCKED_PATTERNS.search(path)
+
+    return domain_ok and is_product_page and not_editorial
 
 
 @tool

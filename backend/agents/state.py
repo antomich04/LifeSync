@@ -7,3 +7,4 @@ class AgentState(TypedDict):
     region: str
     forecast_data: Dict[str, dict]
     target_agent: str
+    language: str

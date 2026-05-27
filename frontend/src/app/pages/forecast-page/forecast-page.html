@@ -10,13 +10,13 @@
             <div class="max-w-2xl space-y-3">
                 <div class="inline-flex items-center gap-2 px-3 py-1 mb-2 text-sm font-medium rounded-full bg-primary-foreground/10 text-primary-foreground">
                     <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-                    Regression Model · 7-Day Horizon
+                    {{ 'forecast.badge' | translate }}
                 </div>
                 <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
-                    Predictive Pollutant Forecasting
+                    {{ 'forecast.title' | translate }}
                 </h1>
                 <p class="text-lg text-primary-foreground/80 leading-relaxed">
-                    Leveraging advanced regression analysis to project daily concentrations of targeted gaseous pollutants over the upcoming seven-day period. Please specify a geographical region to initialize the forecasting system.
+                    {{ 'forecast.description' | translate }}
                 </p>
             </div>
             <div class="hidden md:flex flex-shrink-0 items-center justify-center w-28 h-28 rounded-full bg-primary-foreground/5 border border-primary-foreground/10 shadow-inner">
@@ -39,10 +39,11 @@
             <!-- Card header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-border/50 p-6 md:px-8 pb-4 gap-4">
                 <div>
-                    <h3 class="text-2xl font-semibold tracking-tight text-foreground">Forecast</h3>
+                    <h3 class="text-2xl font-semibold tracking-tight text-foreground">{{ 'forecast.cardTitle' | translate }}</h3>
                     <p class="text-sm text-muted-foreground mt-0.5">
-                        <span class="text-primary font-medium">{{ selectedRegion() }}</span>
-                        &nbsp;·&nbsp; Next 7 days
+                        {{ 'forecast.overviewFor' | translate }}
+                        <span class="text-primary font-medium">{{ selectedRegion() | regionName }}</span>
+                        &nbsp;·&nbsp; {{ 'forecast.next7Days' | translate }}
                     </p>
                 </div>
 
@@ -71,7 +72,7 @@
                 @if (isLoading()) {
                 <div class="flex flex-col items-center justify-center h-48 gap-3">
                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                    <p class="text-sm text-muted-foreground animate-pulse">Running predictive model…</p>
+                    <p class="text-sm text-muted-foreground animate-pulse">{{ 'forecast.loading' | translate }}</p>
                 </div>
 
                 } @else if (errorMessage()) {
@@ -98,7 +99,7 @@
                     <!-- Chart wrapper -->
                     <div class="flex flex-col gap-2">
                         <div class="flex items-center gap-2 px-1">
-                            <span class="text-sm font-semibold text-foreground">Concentration over time</span>
+                            <span class="text-sm font-semibold text-foreground">{{ 'forecast.chartTitle' | translate }}</span>
                             <span class="text-xs text-muted-foreground">· {{ activePollutantData()?.unit }}</span>
                         </div>
                         <div class="h-[400px] w-full border shadow-sm rounded-xl border-border bg-card p-2 md:p-4">
@@ -109,8 +110,7 @@
                             </ls-predictive-chart>
                         </div>
                         <p class="text-[11px] text-muted-foreground italic px-1">
-                            * Dashed line denotes model predictions.
-                            Predictions are based on historical regression and may deviate from actual readings.
+                            {{ 'forecast.note' | translate }}
                         </p>
                     </div>
 
@@ -138,10 +138,9 @@
         </div>
 
         <div class="space-y-1.5 max-w-sm">
-            <p class="text-base font-semibold text-foreground">No municipality selected</p>
+            <p class="text-base font-semibold text-foreground">{{ 'empty.noMunicipality' | translate }}</p>
             <p class="text-sm text-muted-foreground leading-relaxed">
-                Select a Thessaloniki municipality above to run the regression model and generate a 7-day pollutant
-                forecast.
+                {{ 'forecast.empty.description' | translate }}
             </p>
         </div>
 
@@ -155,7 +154,7 @@
                     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                     <circle cx="12" cy="10" r="3" />
                 </svg>
-                {{ hint }}
+                {{ hint | regionName }}
             </button>
             }
         </div>

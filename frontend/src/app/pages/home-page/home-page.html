@@ -19,11 +19,10 @@
             </div>
 
             <h1 class="text-5xl font-extrabold tracking-tight lg:text-6xl">
-                LifeSync: Your Smart Urban Assistant
+                {{ 'home.hero.title' | translate }}
             </h1>
             <p class="text-xl text-muted-foreground">
-                Breathe easier and live smarter in Thessaloniki. Real-time data, predictive analytics, and AI-driven
-                advice all in one place.
+                {{ 'home.hero.description' | translate }}
             </p>
 
             <div class="flex items-center justify-center gap-4 pt-4">
@@ -31,12 +30,12 @@
                 <button
                     routerLink="/dashboard"
                     class="px-6 py-3 font-medium text-primary-foreground select-none cursor-pointer rounded-md bg-primary hover:bg-primary/90">
-                    Open Dashboard
+                    {{ 'home.openDashboard' | translate }}
                 </button>
 
                 <button (click)="scrollToFeatures()"
                     class="inline-flex items-center justify-center cursor-pointer select-none px-6 py-3 font-medium transition-colors bg-transparent border rounded-md border-input hover:bg-accent hover:text-accent-foreground">
-                    Learn More
+                    {{ 'home.learnMore' | translate }}
                 </button>
 
             </div>
@@ -47,13 +46,12 @@
     <section id="features-start" class="py-24 px-6 bg-muted/40 scroll-mt-6">
         <div class="container grid items-center max-w-6xl gap-12 mx-auto lg:grid-cols-2">
             <div class="space-y-4">
-                <h2 class="text-3xl font-bold tracking-tight">Real-Time Environment</h2>
+                <h2 class="text-3xl font-bold tracking-tight">{{ 'home.realtime.title' | translate }}</h2>
                 <p class="text-lg text-muted-foreground">
-                    Monitor exactly what you are breathing. Get live updates on NO<sub>2</sub>, SO<sub>2</sub>, CO, O<sub>3</sub>, and weather conditions
-                    for your specific municipality.
+                    {{ 'home.realtime.description' | translate }}
                 </p>
                 <a routerLink="/dashboard" class="relative inline-block font-medium text-primary pb-0.5 group">
-                    View Live Data &rarr;
+                    {{ 'home.realtime.link' | translate }}
                     <span
                         class="absolute left-0 bottom-0 w-full h-[2px] bg-primary scale-x-0 origin-left transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
                 </a>
@@ -63,12 +61,12 @@
                 <div class="w-full max-w-sm p-5 border shadow-lg bg-card rounded-2xl transition-transform duration-300 ease-in-out hover:scale-105">
                     <div class="flex items-center justify-between pb-4 border-b">
                         <div class="space-y-1">
-                            <p class="text-sm font-medium leading-none">Ampelokipoi-Menemeni</p>
-                            <p class="text-xs text-muted-foreground">Live Air Quality</p>
+                            <p class="text-sm font-medium leading-none">{{ 'home.sampleRegion' | translate }}</p>
+                            <p class="text-xs text-muted-foreground">{{ 'home.liveAirQuality' | translate }}</p>
                         </div>
                         <div
                             class="px-2.5 py-0.5 text-xs font-semibold text-status-good bg-status-good/10 rounded-full">
-                            Good</div>
+                            {{ 'home.status.good' | translate }}</div>
                     </div>
                     <div class="flex items-end justify-between pt-4">
                         <div>
@@ -101,14 +99,12 @@
             </div>
 
             <div class="space-y-4">
-                <h2 class="text-3xl font-bold tracking-tight">Predictive Analytics</h2>
+                <h2 class="text-3xl font-bold tracking-tight">{{ 'home.forecast.title' | translate }}</h2>
                 <p class="text-lg text-muted-foreground">
-                    Plan your day with confidence. Our machine learning regression models predict future pollution
-                    levels based on
-                    historical trends so you can avoid the worst times to be outside.
+                    {{ 'home.forecast.description' | translate }}
                 </p>
                 <a routerLink="/forecast" class="relative inline-block font-medium text-primary pb-0.5 group">
-                    Check Forecast &rarr;
+                    {{ 'home.forecast.link' | translate }}
                     <span
                         class="absolute left-0 bottom-0 w-full h-[2px] bg-primary scale-x-0 origin-left transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
                 </a>
@@ -121,13 +117,12 @@
 
         <div class="container grid items-center max-w-6xl gap-12 mx-auto lg:grid-cols-2">
             <div class="space-y-4">
-                <h2 class="text-3xl font-bold tracking-tight">Your Smart AI Advisors</h2>
+                <h2 class="text-3xl font-bold tracking-tight">{{ 'home.advisors.title' | translate }}</h2>
                 <p class="text-lg text-muted-foreground">
-                    Get personalized health alerts, targeted micro-learning videos when risks are high, and smart
-                    product recommendations to keep you safe.
+                    {{ 'home.advisors.description' | translate }}
                 </p>
                 <a routerLink="/advisors" class="relative inline-block font-medium text-primary pb-0.5 group">
-                    Meet Your Advisors &rarr;
+                    {{ 'home.advisors.link' | translate }}
                     <span
                         class="absolute left-0 bottom-0 w-full h-[2px] bg-primary scale-x-0 origin-left transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
                 </a>
@@ -152,9 +147,9 @@
                     class="absolute top-4 right-4 md:right-12 w-48 p-3 border shadow-lg bg-card rounded-xl -rotate-3 animate-float delay-75">
                     <div class="flex items-center gap-2 mb-1">
                         <div class="w-2 h-2 rounded-full bg-status-danger"></div>
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Health Alert</p>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{{ 'home.healthAlert' | translate }}</p>
                     </div>
-                    <p class="text-xs font-medium">High NO<sub>2</sub> detected. Wear a mask today. </p>
+                    <p class="text-xs font-medium">{{ 'home.healthAlertText' | translate }}</p>
                 </div>
 
                 <div
@@ -166,16 +161,15 @@
                                 d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 103.38 103.38 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 103.38 103.38 0 0 1-15 0 2 2 0 0 1-2-2Z" />
                             <path d="m10 15 5-3-5-3z" />
                         </svg>
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Micro-Learning
-                        </p>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{{ 'home.microLearning' | translate }}</p>
                     </div>
-                    <p class="text-xs font-medium">Protecting your lungs in the city. </p>
+                    <p class="text-xs font-medium">{{ 'home.microLearningText' | translate }}</p>
                 </div>
 
                 <div
                     class="absolute top-1/2 -left-4 w-40 p-3 border shadow-md bg-primary/5 rounded-lg -translate-y-1/2 -rotate-12 blur-[0.5px] opacity-60 hidden md:block">
-                    <p class="text-[10px] font-bold text-primary italic">Top Pick</p>
-                    <p class="text-xs">Air Purifier HEPA </p>
+                    <p class="text-[10px] font-bold text-primary italic">{{ 'home.topPick' | translate }}</p>
+                    <p class="text-xs">{{ 'home.airPurifier' | translate }}</p>
                 </div>
             </div>
         </div>

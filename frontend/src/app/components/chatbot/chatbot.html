@@ -42,7 +42,7 @@
                 </div>
                 <div>
                     <h3 class="text-sm font-bold text-foreground">Lucy</h3>
-                    <p class="text-[10px] font-medium text-status-online">AI Assistant</p>
+                    <p class="text-[10px] font-medium text-status-online">{{ 'chatbot.assistant' | translate }}</p>
                 </div>
             </div>
             <button (click)="chatbotService.closeChat()"
@@ -117,7 +117,7 @@
             <form (ngSubmit)="sendMessage()" class="flex items-end gap-2 relative">
                 <textarea #chatInput name="chatInput" [ngModel]="inputText()" (ngModelChange)="inputText.set($event)"
                     (input)="autoResize($event)" (keydown.enter)="handleEnter($event)"
-                    placeholder="Ask Lucy anything..." maxlength="500" rows="1"
+                    [placeholder]="'chatbot.placeholder' | translate" maxlength="500" rows="1"
                     class="flex-1 bg-muted border border-border rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground resize-none selection:bg-primary/30 selection:text-primary overflow-y-auto"
                     style="min-height: 44px; max-height: 120px;"></textarea>
 
