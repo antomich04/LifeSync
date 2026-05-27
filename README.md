@@ -64,16 +64,13 @@ LifeSync/
 
 ## Backend Setup
 
-From the project root:
+The backend runs inside Docker, so **Python does not need to be installed locally**.
 
-```powershell
-cd backend
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
+### Prerequisites
 
-Create `backend/.env` with the values your local environment needs:
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes `docker compose`)
+
+### 1. Create `backend/.env`
 
 ```env
 DB_URL=postgresql+asyncpg://USER:PASSWORD@HOST:PORT/DATABASE
@@ -87,16 +84,44 @@ OPENWEATHER_API_KEY=your_openweather_key
 BASE_OPENWEATHER_API_URL=https://api.openweathermap.org/data/2.5/air_pollution
 ```
 
-Run the API:
+### 2. Build and start the container
+
+From the project root:
 
 ```powershell
-uvicorn server:app --reload --host 0.0.0.0 --port 8000
+docker compose up --build
 ```
+
+To run it in the background:
+
+```powershell
+docker compose up --build -d
+```
+
+Stop it with:
+
+```powershell
+docker compose down
+```
+
+The container uses `python:3.12-slim` and installs all dependencies automatically, so the environment is identical regardless of the host machine.
 
 The local API base URL is:
 
 ```text
 http://localhost:8000/api
+```
+
+### Alternative: run directly with Python 3.12
+
+If you prefer to skip Docker and already have **Python 3.12** installed:
+
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn server:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ## Frontend Setup
@@ -125,7 +150,13 @@ Production builds use `src/environments/environment.ts`.
 
 ## Useful Commands
 
-Backend syntax check:
+Backend syntax check (inside the running container):
+
+```powershell
+docker compose exec backend python -m py_compile server.py agents/graph.py
+```
+
+Or with the local venv:
 
 ```powershell
 cd backend
@@ -139,7 +170,13 @@ cd frontend
 npm run build
 ```
 
-Generate/update pollutant forecasts:
+Generate/update pollutant forecasts (inside the running container):
+
+```powershell
+docker compose exec backend python data_processing/run_forecast.py
+```
+
+Or with the local venv:
 
 ```powershell
 cd backend
