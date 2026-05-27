@@ -81,7 +81,7 @@ export class HlmSidebar {
 	public readonly sidebarContainerClass = input<ClassValue>('');
 	protected readonly _sidebarContainerComputedClass = computed(() =>
 		hlm(
-			'fixed inset-y-0 z-10 hidden h-svh w-[var(--sidebar-width)] transition-[left,right,width] duration-200 ease-linear md:flex',
+			'fixed inset-y-0 z-10 hidden h-svh w-[var(--sidebar-width)] transition-[left,right,width] duration-200 ease-linear min-[850px]:flex',
 			this.side() === 'left'
 				? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
 				: 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
@@ -131,7 +131,7 @@ export class HlmSidebar {
 			} else if (this._sidebarService.isMobile()) {
 				return '';
 			} else {
-				return hlm('text-sidebar-foreground group peer hidden md:block');
+				return hlm('text-sidebar-foreground group peer hidden min-[850px]:block');
 			}
 		});
 	}

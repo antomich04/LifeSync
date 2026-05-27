@@ -21,7 +21,7 @@ export class Sidebar {
 
   closeMobileSidebar(): void {
 
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const isMobile = window.matchMedia('(max-width: 850px)').matches;
     
     if (!isMobile) return;
 

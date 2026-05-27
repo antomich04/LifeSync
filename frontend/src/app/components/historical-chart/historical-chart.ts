@@ -43,6 +43,20 @@ export class HistoricalChartComponent {
   //UI State
   public readonly availableYears = signal<number[]>([]);
   public readonly selectedYear = signal<number>(0);
+  
+  public readonly visibleYears = computed(() => {
+    const current = this.selectedYear();
+    const all = this.availableYears();
+    const currentIndex = all.indexOf(current);
+    
+    if (currentIndex === -1) return [];
+    
+    const start = Math.max(0, currentIndex - 1);
+    const end = Math.min(all.length - 1, currentIndex + 1);
+    
+    return all.slice(start, end + 1);
+  });
+
   public readonly aqiData = signal<(number | null)[]>([]);
   public readonly particleData = signal<HistoricalParticleResponse | null>(null);
   public readonly errorMessage = signal<string | null>(null);
@@ -56,6 +70,7 @@ export class HistoricalChartComponent {
   ];
 
   public selectedTab = signal<TabOption>(this.tabs[0]);
+  public readonly isDropdownOpen = signal<boolean>(false);
 
   public selectTab(tab: TabOption) {
     this.selectedTab.set(tab);

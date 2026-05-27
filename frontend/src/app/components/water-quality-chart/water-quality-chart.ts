@@ -40,6 +40,19 @@ export class WaterQualityChartComponent {
   public readonly availableYears = signal<number[]>([2023, 2024]);
   public readonly selectedYear = signal<number>(this.availableYears()[1]);
 
+  public readonly visibleYears = computed(() => {
+    const current = this.selectedYear();
+    const all = this.availableYears();
+    const currentIndex = all.indexOf(current);
+    
+    if (currentIndex === -1) return [];
+    
+    const start = Math.max(0, currentIndex - 1);
+    const end = Math.min(all.length - 1, currentIndex + 1);
+    
+    return all.slice(start, end + 1);
+  });
+
   public readonly waterData = signal<WaterMonthlyData[]>([]);
   public readonly isLoading = signal<boolean>(false);
   public readonly errorMessage = signal<string | null>(null);
@@ -125,6 +138,17 @@ export class WaterQualityChartComponent {
 
   public selectTab(tab: WaterTabOption) {
     this.selectedTab.set(tab);
+  }
+  
+  public readonly isDropdownOpen = signal<boolean>(false);
+
+  public onTabChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedId = selectElement.value;
+    const tab = this.tabs.find(t => t.id === selectedId);
+    if (tab) {
+      this.selectTab(tab);
+    }
   }
 
   public getTabLabel(tab: WaterTabOption): string {
