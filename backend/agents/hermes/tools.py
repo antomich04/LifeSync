@@ -30,6 +30,11 @@ POLLUTANT_QUERIES = {
 
 ALLOWED_DOMAIN = {"skroutz.gr"}
 BLOCKED_PATTERNS = re.compile(r"blog|guide|news|article|review|beauty|cosmetic|skoop", re.IGNORECASE)
+FALLBACK_PRODUCT_URL = (
+    "https://www.skroutz.gr/s/51965155/Hepa-AlecoAir-P14-MINIO-P14MINIO-"
+    "Katharistis-Aera-24W-gia-CHorous-15m2.html?adv_c=6Zvya%2FRp5sNb8wqdt93HfJUMkJfO--"
+    "YHGeWyuESOmD0k83--IskLdfBLVGVLonMqpup7YA%3D%3D&product_id=194149310&sponsored=cpc"
+)
 
 
 def is_valid_product_url(url: str) -> bool:
@@ -75,7 +80,10 @@ def search_greek_marketplaces(pollutant: str) -> str:
             break
 
     if not all_results:
-        return f"No valid Skroutz products found for {pollutant}."
+        return (
+            f"No valid Skroutz products found for {pollutant}. "
+            f"Fallback URL: {FALLBACK_PRODUCT_URL}"
+        )
 
     return "\n".join(all_results)
 
